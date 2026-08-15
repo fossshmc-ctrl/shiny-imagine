@@ -1,0 +1,15 @@
+
+/* ===== V14.7：保留组合顺序检查，精简高级区域与项目菜单 ===== */
+.v146-order-tool{margin-bottom:8px;border:1px solid #dcdcd7;background:#fafaf8}
+.v146-order-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px;border-bottom:1px solid #e6e6e1}
+.v146-order-head b{font-size:9px}.v146-order-head small{display:block;margin-top:2px;color:#777;font-size:7px;line-height:1.4}
+.v146-order-status{display:inline-flex;align-items:center;justify-content:center;min-width:58px;padding:4px 6px;border:1px solid #b9d8c3;background:#f2fbf5;color:#17653a;font-size:7px;white-space:nowrap}
+.v146-order-status.warn{border-color:#dec17e;background:#fff9ec;color:#805308}.v146-order-status.bad{border-color:#e0a2a2;background:#fff2f2;color:#942d2d}.v146-order-status.drag{border-color:#a9a2dc;background:#f6f3ff;color:#55428c}
+.v146-order-body{padding:8px}.v146-order-current{font-size:7px;color:#666;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:6px 7px;border:1px solid #e4e4df;background:#fff}
+.v146-order-current b{color:#222}.v146-order-issues{display:grid;gap:5px;margin-top:6px}.v146-order-issue{padding:6px 7px;border-left:3px solid #d0a548;background:#fffaf0;font-size:7px;line-height:1.5;color:#654c1b}.v146-order-issue.bad{border-left-color:#bf4a4a;background:#fff3f3;color:#7b2424}.v146-order-ok{margin-top:6px;padding:6px 7px;border-left:3px solid #3f9b61;background:#f3fbf5;color:#215f38;font-size:7px;line-height:1.5}
+.v146-order-suggest{margin-top:6px;padding:6px 7px;background:#f2f2ef;font-size:7px;line-height:1.5;color:#555}.v146-order-suggest b{color:#222}
+.v146-order-actions{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}.v146-order-actions button{font-size:7px;min-height:27px;padding:4px 7px}
+.v146-order-live{margin-top:6px;padding:6px 7px;border:1px dashed #9e95d4;background:#f8f6ff;color:#55428c;font-size:7px;line-height:1.5}.v146-order-live[hidden]{display:none}
+.v146-protection-note{margin-top:6px;color:#777;font-size:6.5px;line-height:1.45}
+.v146-drop-good{box-shadow:inset 0 0 0 2px #4b9c68!important}.v146-drop-warn{box-shadow:inset 0 0 0 2px #d0a548!important}.v146-drop-bad{box-shadow:inset 0 0 0 2px #bf4a4a!important}
+@media(max-width:520px){.v146-order-head{align-items:flex-start}.v146-order-actions{display:grid;grid-template-columns:1fr 1fr}.v146-order-actions button{width:100%}}

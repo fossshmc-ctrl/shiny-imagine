@@ -1,0 +1,80 @@
+V27.4 CHANGELOG
+===============
+Release: 2026-08-13
+Build: v27.4-micro-performance-20260813
+Scope: 智能区域编辑工作台微调生图性能与可观测性
+
+一、修复：preflight 缓存被 save() 清空
+----------------------------------------
+- 重写 src/integrations/micro-api-channel.js 的 save(cfg) 缓存失效条件。
+- 通过 Base URL、API Key、imageModel 三项生成 identity fingerprint。
+- 只有 identity fingerprint 真实变化时才清除：
+  testCache / creditCache / creditReadyAt / preflightReadyAt / isolationCache。
+- lastTestOk、lastTestAt、lastTestMessage、models 等普通状态更新不再影响缓存。
+- 修复原先“preflight 成功写入 5 分钟缓存，随后 save() 立即将其清空”的实际运行时 BUG。
+
+二、优化：完整诊断与轻量 Credits 分层
+--------------------------------------
+- API 测试始终运行 collectDiagnostics() 完整诊断，并写入 5 分钟缓存。
+- 正常生成在以下条件运行完整诊断：首次无缓存、配置发生变化、完整诊断缓存超过 300000ms。
+- 5 分钟完整诊断缓存命中时，不访问 /models 或 files quota。
+- 正常生成仅调用 ensureLightCredits()；Credits 缓存有效期为 60000ms。
+- 进入 EvoLinkImageAdapter.generate() 时使用 creditReadyAt 判断 skipCreditsCheck，避免同一生成流程再次 GET /api/credits。
+- /api/micro/health 的隔离校验结果缓存 30 秒；完整诊断后的 assertIsolation() 不再立即重复请求 health。
+
+三、优化：source + layout/mask guide 双参考图
+---------------------------------------------
+- 新增 V27.4 参考图计划：source+layout-mask-guide-v274。
+- 原 source、target-layout、combined-mask 三张输入改为：
+  1) source 原图；
+  2) layout-mask-guide 目标布局与编辑范围合并引导图。
+- 合并引导图以目标布局为底图，以青色半透明方式叠加 Mask 编辑区域。
+- 参考图准备继续使用 WebP 压缩与尺寸限制。
+- 固定 uploadConcurrency=2，两张图同批并发上传。
+- Prompt 补充第二张引导图的颜色与语义说明，避免模型把青色覆盖当作最终视觉内容。
+
+四、新增：点击到出图性能仪表
+----------------------------
+- 新增/升级 src/core/micro-performance-meter.js。
+- 记录以下阶段：
+  preflightMs / syncMs / compressMs / uploadMs / submitMs /
+  providerQueueMs / generationMs / resultMs / postCheckMs。
+- 用户要求的八个主要指标全部在右侧结果区下方展示；syncMs 保留在诊断快照中用于解释区域同步耗时。
+- 计时从点击“微调生成”开始，生成状态在 preflight 阶段即显示。
+- 在发起任何网络预检前先验证“已选区域”和本地同步通道，空请求不会触发诊断。
+- resultMs 等待首张 provider URL 被浏览器实际加载/解码；设置 30 秒有界回退，避免 CDN 异常永久阻塞后续检查。
+- postCheckMs 单独记录质量、保护区域和 AI 指令回归检查，不阻塞首张结果展示。
+
+五、新增：EvoLink task 生命周期拆分
+----------------------------------
+- EvoLinkImageAdapter 支持 onTaskUpdate 与 onPerformance 回调。
+- 记录 task_id、raw status、progress、estimated_time 与时间戳。
+- 标准化状态路径为 pending → processing → completed。
+- providerQueueMs：任务接收后到 processing 的时间。
+- generationMs：processing 到 completed 的时间。
+- 服务端直接从 pending/未知跳到 completed 时，补全缺失状态并标记 inferred=true；UI 使用“*”说明该状态为推断。
+- 保留 pollMs 总轮询时间，便于和 providerQueueMs / generationMs 对照。
+
+六、结果区与下载
+----------------
+- 生成图片保持完整显示。
+- 结果信息与“下载图片”按钮继续固定在图片下方，不覆盖图片。
+- 性能仪表位于结果信息栏下方。
+- 可根据最大耗时自动提示：预检、上传、上游排队、模型生成或本地检查中的主要瓶颈。
+
+七、版本与服务端元数据
+----------------------
+- 应用版本统一为 V27.4 / 27.4.0。
+- Windows 启动器期望版本与 buildId 更新为 V27.4 / v27.4-micro-performance-20260813。
+- Node/Python /api/health 与 /api/micro/health 增加：
+  diagnosticCacheMs、creditCacheMs、fullDiagnosticsOnlyOnTestOrCacheExpiry、
+  referencePlan、uploadConcurrency、clickToImagePerformance、taskLifecycle。
+- 微调协议通道更新为 micro-adjust-v27.4。
+- 页面资源 cache query 更新为 ?v=27.4。
+
+八、测试与发布安全
+------------------
+- 新增 V27.4 行为级缓存回归测试，不只检查常量或字符串。
+- 测试覆盖：首次完整诊断、61 秒后仅 Credits、60 秒内 Credits 复用、普通 save() 不失效、Model 变化后完整诊断重跑。
+- 测试覆盖双参考图角色、并发目标、task 排队/生成拆分、推断生命周期、八段性能字段、结果区不遮挡与下载入口。
+- 发布验证不调用 /v1/images/generations，不产生图片与生图费用。

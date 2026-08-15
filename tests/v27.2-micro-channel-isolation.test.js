@@ -1,0 +1,11 @@
+const test=require('node:test');
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const ROOT=path.resolve(__dirname,'..');
+const read=f=>fs.readFileSync(path.join(ROOT,f),'utf8');
+test('V27.2 micro browser traffic is routed through isolated /api/micro namespace',()=>{const s=read('src/integrations/micro-api-channel.js');assert.match(s,/function microPath/);assert.match(s,/\/api\/micro\//);assert.match(s,/micro-adjust-v27\.8/);});
+test('V27.2 micro generation is bounded to one result and 360 second base and 480 second maximum same-task polling budget',()=>{const s=read('src/integrations/micro-api-channel.js');assert.match(s,/MICRO_COUNT=1/);assert.match(s,/MICRO_TASK_TIMEOUT_MS=360000/);assert.match(s,/MICRO_TASK_SOFT_TIMEOUT_MS=180000/);assert.match(s,/MICRO_TASK_MAX_TIMEOUT_MS=480000/);assert.match(s,/pollTimeoutMs:MICRO_TASK_TIMEOUT_MS/);});
+test('V27.2 diagnostics do not treat builtin fallback models as live connectivity',()=>{const s=read('src/integrations/micro-api-channel.js');assert.match(s,/catalogLive/);assert.match(s,/不能证明 EvoLink \/models 当前连通/);});
+test('V27.2 node server isolates micro route health and safe POST failover',()=>{const s=read('server.js');assert.match(s,/MICRO_ROUTE_HEALTH/);assert.match(s,/requestMicroExternal/);assert.match(s,/safePreconnectFailure/);assert.match(s,/rawApiPath.*microChannel/s);});
+test('V27.2 adapter accepts per-flow poll timeout',()=>{const s=read('src/core/evolink-image-adapter.js');assert.match(s,/pollTimeoutMs=POLL_TIMEOUT_MS/);assert.match(s,/opts\.pollTimeoutMs/);});

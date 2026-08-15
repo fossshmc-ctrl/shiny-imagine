@@ -1,0 +1,86 @@
+V27.4 MODIFIED FILES
+====================
+
+核心性能与参考图
+----------------
+- src/core/micro-performance-meter.js
+  点击到出图阶段计时、task 生命周期、provider 性能合并、事件广播。
+- src/core/micro-image-transport.js
+  source + layout/mask guide 两参考图计划、WebP 压缩与合并引导图。
+- src/core/evolink-image-adapter.js
+  双路参考图上传、Credits 跳过、task 状态回调、排队/生成时间拆分。
+- src/core/region-ai-prompt.js
+  V27.4 合并引导图语义与青色编辑区域说明。
+
+智能区域编辑链路
+----------------
+- src/integrations/micro-api-channel.js
+  save() identity-only 缓存失效、5 分钟完整诊断、60 秒 Credits、V27.4 独立通道与性能回调。
+- src/features/adjust/image-adjust-core.js
+  V27.4 referencePlan 向 Prompt bridge 传递。
+- src/features/adjust/image-adjust-enhancement-layer.js
+  双参考图准备、浏览器可解码结果计时、结果优先展示、postCheck 独立计时。
+- src/features/adjust/micro-adjust-output-channel.js
+  V27.4 输出通道、性能快照持续回写。
+- src/features/region-workbench/region-workbench.js
+  点击边界计时、预检前本地校验、结果/下载/八段性能仪表、task 状态路径。
+- src/features/region-workbench/region-route.js
+  V27.4 版本与路由兼容元数据。
+- styles/features/region-workbench.css
+  结果区下方性能仪表、状态路径与响应式样式。
+
+服务端、启动与版本
+----------------
+- server.js
+  V27.4 health/build/channel 元数据与微调通道校验。
+- server.py
+  Node 服务端对应的 V27.4 health/build/channel 元数据。
+- config.json
+  V27.4、buildId、5 分钟/60 秒缓存、双上传并发等配置。
+- copy-coze.private.json
+  发布版本同步，Token 保持为空。
+- package.json
+  包名、27.4.0 版本与测试脚本。
+- index.html
+  V27.4 标题、cache query、性能 meter 加载顺序。
+- start.bat
+  Windows 期望版本、buildId 和 cache-busted URL。
+- src/bootstrap/title-guard.js
+  页面标题版本同步。
+- src/views/home-view.js
+  首页版本信息同步。
+
+测试与验证
+----------
+- tests/v27.4-smart-region-performance.test.js (new)
+  行为级缓存、双参考图、task 拆分、性能字段、Keep-Alive、服务端元数据。
+- tests/v27.4-output-performance.test.js (new)
+  结果区不遮挡、下载、性能 UI、版本/启动器一致性。
+- tests/evolink-image-adapter.test.js
+  V27.4 adapter 版本预期。
+- tests/v27-micro-evolink-channel.test.js
+  V27.4 微调 stage / 通道预期。
+- tests/v27.2-micro-channel-isolation.test.js
+  V27.4 通道 header 预期。
+- tests/v27.3-conflict-isolation-regression.test.js
+  V27.4 独立微调通道预期。
+- scripts/verify-project.js
+  V27.4 发布结构、缓存、参考图、性能、元数据与文档守卫。
+- 删除 tests/v27.3.1-micro-performance.test.js
+- 删除 tests/v27.3.2-output-toolbar-download.test.js
+
+架构与历史归档
+--------------
+- ARCHITECTURE.md
+  新增 V27.4 缓存、双参考图、task 生命周期与性能链路说明。
+- docs/history/V27.3.2/
+  将上一版本的 CHANGELOG、回归清单和修改文件说明移入历史目录，包根目录只保留当前版本发布资料。
+
+发布文档
+--------
+- README.txt
+- V27.4-CHANGELOG.txt (new)
+- V27.4-REGRESSION-CHECKLIST.txt (new)
+- V27.4-MODIFIED-FILES.txt (new)
+- VERIFICATION.txt
+- SHA256SUMS.txt（最终打包前重新生成）

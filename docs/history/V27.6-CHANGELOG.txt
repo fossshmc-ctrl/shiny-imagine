@@ -1,0 +1,31 @@
+V27.6 CHANGELOG
+===============
+Build: v27.6-micro-poll-route-recovery-20260813
+Target: Windows ZIP
+
+Fixed
+-----
+1. Removed the V27.5 hard failure at exactly 150 seconds while an EvoLink task was still pending/processing.
+2. Added a 180-second soft threshold, 360-second base budget, and bounded 480-second maximum for the same task_id.
+3. Added up to three retry attempts for read-only task-status GET requests on transient TLS, socket, DNS, timeout, 408/425/429/5xx failures.
+4. Guaranteed recovery polling never issues a second billed `/images/generations` POST.
+5. Classified `Client network socket disconnected before secure TLS connection was established` as transient `tls_handshake`.
+6. Added 90-second auto-proxy quarantine and automatic proxy-resolution reset after transient TLS/pre-connect failure.
+7. Isolated HTTPS CONNECT Keep-Alive pools by proxy plus target authority; failed target agents can be destroyed selectively.
+8. Bounded and decayed micro-route health scoring, including consecutive-failure penalties.
+9. Changed Apifox Echo checks to advisory diagnostics. Real EvoLink `/models`, files GET and reference upload checks are authoritative.
+10. Fixed Python diagnostic error assembly so a failure payload cannot duplicate/overwrite the `message` keyword.
+11. Added UI telemetry for soft timeout, safe GET retries, network stall, current budget, maximum budget and same-task-only recovery.
+12. Increased orphaned local micro-run recovery threshold from 210 seconds to 600 seconds so a legitimate extended provider task is not mistaken for stale local state.
+
+Retained
+--------
+- V27.4 identity-only preflight cache invalidation, 5-minute diagnostic cache, 60-second Credits cache and two-reference concurrent upload.
+- V27.5 direct acknowledged handoff, fresh per-click sessions, sticky-busy cleanup, and billed-route generationId gate.
+- One result per micro-adjust run; uploadConcurrency=2.
+- No automatic retry around the billed generation POST.
+- Result-first display and non-blocking post-check pipeline.
+
+Safety
+------
+No external billed image-generation task was created during V27.6 development, tests, health checks or packaging.

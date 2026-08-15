@@ -1,0 +1,59 @@
+V25.6 CHANGELOG
+Date: 2026-08-10
+Release: V25.6 / 25.6.0
+Build: v25.6-region-refresh-anchor-20260810
+
+本次版本只修复程序逻辑与刷新恢复状态，不生成、不修改任何图片内容。
+
+1. 修复：空白“智能区域编辑工作台”刷新后错误跳回历史图片
+- V25.5 的刷新恢复会读取 localStorage 中的 turing_region_v21_active_project。
+- 该键会长期保留“最近被设为 active 的项目”，即使当前工作台实际为空。
+- V25.5 在找不到 active 项目时还会在“只有一个历史项目”时自动恢复该项目。
+- 结果：当前画布为空，F5 / 浏览器刷新后仍可能自动出现旧图片。
+- V25.6 删除刷新恢复对这个历史 active 指针的依赖；空白工作台会写入当前标签页专属 empty refresh anchor，刷新后继续保持空白。
+
+2. 修复：手动点击历史/上一次保存版本后污染后续刷新目标
+- V25.5 的 applyPayloadRecord(..., 'manual') 会间接把历史项目写成 active project。
+- 之后 F5 / Ctrl+R / 浏览器刷新会把这个历史项目当成自动恢复目标。
+- V25.6 将“手动历史恢复”和“浏览器刷新恢复目标”彻底拆开。
+- 手动点击“最近自动保存 / 上一次手动保存 / 初始识别版本”只负责当前查看/恢复，不会自动晋升为 refresh anchor。
+
+3. 新增：标签页级 Region Refresh Anchor
+- 新增 src/core/region-refresh-anchor.js。
+- 使用 sessionStorage 键 turing_region_v25_6_refresh_anchor。
+- 支持两种状态：
+  a) empty：当前工作台应保持空白；
+  b) project：刷新只允许恢复明确绑定的当前项目 ID。
+- 不再使用“最近项目”“唯一项目”“旧 active project”作为自动兜底。
+
+4. 上传图片后的刷新行为
+- 通过智能区域工作台上传/替换新图片时，新的 projectId 会立即成为当前 refresh anchor。
+- 正常编辑和自动保存不会改变到其他历史项目。
+- 因此：上传 A → 刷新仍是 A；手动查看 B → 刷新仍回到 A；空白进入 → 刷新仍为空白。
+
+5. 失败保护
+- 如果 refresh anchor 指向的项目已经不存在，V25.6 会把刷新目标降级为空白状态。
+- 不会为了“帮用户恢复”而自动选择最近历史项目，避免出现错误图片。
+
+6. 诊断能力
+- window.__V21_PROJECT_DIAGNOSTICS__ 新增 refreshAnchor 字段，可直接确认当前浏览器刷新绑定的项目。
+- 版本诊断返回 V25.6。
+
+7. 回归测试
+- 新增 tests/region-refresh-anchor.test.js。
+- 覆盖：空白刷新、上传项目锚定、手动历史不污染、非法锚点清理、禁止最近项目/唯一项目兜底。
+- npm test：79 项全部通过。
+
+8. Windows 发布版本
+- package.json：25.6.0。
+- config.json：V25.6。
+- 页面缓存版本：25.6.0。
+- Node/Python health build：v25.6-region-refresh-anchor-20260810。
+- start.bat / debug-start.bat 启动器显示 V25.6。
+
+9. 同一项目历史版本的额外保护
+- refresh anchor 的 versionKey 使用独立 `refreshAnchor` 快照槽，不直接指向会持续变化的 `autosave` 槽。
+- 正常编辑当前项目时，autosave 与 refreshAnchor 同步更新。
+- 手动恢复历史版本后进入 `manualRestorePreview`，后续页面隐藏/F5 前自动保存即使改写 autosave，也不会覆盖 refreshAnchor 快照。
+- reload 时 source=refresh 只读取 refreshAnchor 指定版本；指定版本缺失时不会偷偷回退到 autosave/manual。
+- 因此即使“上一次手动保存”来自同一个 projectId，也不会通过 autosave 覆盖再次污染刷新结果。

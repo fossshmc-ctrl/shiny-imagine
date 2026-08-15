@@ -1,0 +1,28 @@
+V28.1.1 MODIFIED FILES
+=======================
+
+Build: v28.1.1-performance-panel-collapse-20260814
+
+Modified:
+- src/features/region-workbench/region-workbench.js
+  Added collapsible performance dashboard state, compact toggle UI and delegated interaction.
+- styles/features/region-workbench.css
+  Added compact horizontal performance toggle and collapsed/expanded layout rules.
+- tests/v28.1.1-performance-panel-collapse.test.js
+  Added release-specific regression coverage.
+- tests/*
+  Updated active release metadata expectations to V28.1.1.
+- index.html
+  Cache-busting upgraded to ?v=28.1.1.
+- server.js / server.py
+  Runtime version/build metadata upgraded.
+- config.json / package.json / start.bat
+  Release metadata upgraded.
+- V28.1.1-CHANGELOG.txt
+- V28.1.1-REGRESSION-CHECKLIST.txt
+- V28.1.1-MODIFIED-FILES.txt
+
+Archived historical V28.0 documents:
+- docs/archive/V28.0-CHANGELOG.txt
+- docs/archive/V28.0-MODIFIED-FILES.txt
+- docs/archive/V28.0-REGRESSION-CHECKLIST.txt

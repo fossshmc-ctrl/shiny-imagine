@@ -1,0 +1,102 @@
+V27.5 REGRESSION CHECKLIST
+==========================
+
+A. Windows 启动与版本
+--------------------
+[ ] 完整解压后双击 start.bat 可启动。
+[ ] EXPECTED_VERSION=V27.5。
+[ ] EXPECTED_BUILD=v27.5-micro-handoff-stability-20260813。
+[ ] 浏览器资源 URL 使用 ?v=27.5。
+[ ] 页面标题显示“V27.5 · 图灵线框工作台”。
+[ ] /api/health 返回 version=V27.5、正确 buildId、assetsReady=true。
+[ ] /api/micro/health 返回 channelHeader=micro-adjust-v27.5。
+
+B. 复现问题的关键验收：连续两次微调
+------------------------------------
+[ ] 第一次选择区域并点击“微调生成”，仪表从预检进入流程交接、压缩/合并、上传和 provider task。
+[ ] 第一次生成完成后再次对同一图片/同一区域发起第二次微调。
+[ ] 第二次运行创建新的 sessionId 和 generationId。
+[ ] 第二次不继承第一次的 generating、taskId、阶段耗时或错误。
+[ ] 第一轮延迟到达的 performance 事件不能覆盖第二轮仪表。
+[ ] 第二次 preflight 完成后在约 3 秒内进入 sync/compress，或明确失败；不得无限停留在 preflight-only。
+[ ] 连续运行期间没有重复的 `/v1/images/generations` 计费 POST。
+
+C. 直接交接与 acknowledgement
+-----------------------------
+[ ] region workbench 不查找或调用 `[data-adj-ai-run].click()`。
+[ ] 区域 apply 仅负责同步数据，随后调用 `__V275_START_MICRO_ADJUST__()`。
+[ ] 生成处理器在第一次 await 前写入 `microRunAcknowledgedAt`。
+[ ] generationId 不一致时交接立即失败。
+[ ] 缺少生成处理器时立即提示“未提交计费任务”。
+[ ] 处理器未 acknowledgement 时立即返回 `micro_handoff_not_acknowledged`。
+[ ] acknowledgement 未写入 micro channel 时立即失败，不发送 provider POST。
+[ ] 成功 acknowledgement 后 handoffStatus=accepted。
+
+D. 计费请求门禁
+--------------
+[ ] 浏览器端 generationActive=false 时阻止 `/api/micro/images/generations`。
+[ ] generationId 与 active generationId 不一致时阻止请求。
+[ ] handoff 不是 accepted 时阻止请求。
+[ ] Node 服务缺少 `X-Micro-Handoff-Acknowledged: 1` 时返回 409。
+[ ] Python 服务缺少 `X-Micro-Handoff-Acknowledged: 1` 时返回 409。
+[ ] Node/Python CORS allow-headers 均包含 X-Micro-Handoff-Acknowledged。
+[ ] 失败或超时后不自动重新提交计费 POST。
+
+E. busy、完成与陈旧状态清理
+---------------------------
+[ ] 上一任务真实仍在运行时，第二次点击明确提示 busy，而不是静默等待。
+[ ] busy 拒绝不会创建第二个 provider task。
+[ ] 成功后 `aiBusy=false`、`microRunActive=false`。
+[ ] 失败后 `aiBusy=false`、`microRunActive=false`。
+[ ] handoff-failed 后状态可再次点击重试。
+[ ] 已无执行 Promise 且超过 210 秒的 stale session 可被恢复。
+[ ] 仍有真实 Promise 的任务不会因 stale recovery 被强制并发重提。
+
+F. 点击到出图性能仪表
+--------------------
+[ ] 显示 preflightMs（预检）。
+[ ] 显示 syncMs（流程交接）。
+[ ] 显示 compressMs（压缩/合并）。
+[ ] 显示 uploadMs（上传）。
+[ ] 显示 submitMs（提交）。
+[ ] 显示 providerQueueMs（上游排队）。
+[ ] 显示 generationMs（模型生成）。
+[ ] 显示 resultMs（结果显示）。
+[ ] 显示 postCheckMs（本地检查）。
+[ ] 当前阶段与 handoff 状态随流程更新。
+[ ] 交接失败时仪表进入 failed，不继续空计时。
+[ ] 仪表位于结果图和下载栏下方，不遮挡图片。
+
+G. V27.4 缓存与参考图回归
+------------------------
+[ ] 普通 lastTestOk / lastTestAt 保存不清空 preflight 缓存。
+[ ] Base URL / API Key / Model 真实变化时清空缓存。
+[ ] 完整诊断缓存 5 分钟。
+[ ] Credits 缓存 60 秒。
+[ ] 缓存有效时正常生成不访问 /models 或 files quota。
+[ ] 同一生成流程不重复 GET Credits。
+[ ] 参考图只有 source + layout-mask-guide 两张。
+[ ] uploadConcurrency=2。
+[ ] task 状态保留 pending → processing → completed。
+
+H. 错误边界
+-----------
+[ ] 区域同步超过约 2.88 秒时明确报错并停止。
+[ ] 本地 micro health 超过 8 秒时明确超时。
+[ ] 没有选择区域时不进行网络预检。
+[ ] 缺少可执行修改指令时不提交 provider task。
+[ ] AI 指令回归前检失败时不提交 provider task。
+[ ] provider 失败后结果区显示错误原因。
+
+I. 结果、下载与兼容功能
+----------------------
+[ ] 生成图片完整显示。
+[ ] 结果信息栏位于图片下方。
+[ ] 下载图片按钮可正常进入保存流程。
+[ ] 首张结果显示后再执行 postCheck。
+[ ] AI 线框生成正常。
+[ ] 普通 AI 生图正常。
+[ ] 文案生成/Coze 通道正常。
+[ ] OCR/PaddleOCR 队列重试正常。
+[ ] 历史记录、项目恢复与路由恢复正常。
+[ ] API Key / Token 不包含在发布包中。

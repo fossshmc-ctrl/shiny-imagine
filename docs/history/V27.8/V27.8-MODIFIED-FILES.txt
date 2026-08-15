@@ -1,0 +1,51 @@
+V27.8 MODIFIED FILES
+====================
+
+核心修复
+--------
+- src/core/region-ai-prompt.js
+  逐区域 Prompt 解析；每任务兜底指令；V27.8 浏览器别名；prompt_source。
+- src/core/region-prompt-state.js
+  V27.8 当前别名；旧实时参数与自由区域迁移能力。
+- src/core/region-generation-regression.js
+  V27.8 回归版本；JSON 转义文本解码；任务身份检查；missingInstructionRegionIds 诊断字段。
+- src/features/region-workbench/region-workbench.js
+  自由区域初始指令与旧状态补齐；自由区域重新识别保留；区域/文档草稿生成前自动提交；V27.8 Prompt 状态调用。
+- src/features/adjust/image-adjust-core.js
+  优先使用 RegionAiPromptV278；V27.8 Prompt bridge 元数据。
+
+版本与运行元数据
+----------------
+- index.html
+- start.bat
+- package.json
+- config.json
+- server.js
+- server.py
+- copy-coze.private.json
+- network-keepalive.js
+- src/core/evolink-image-adapter.js
+- src/core/micro-image-transport.js
+- src/core/micro-performance-meter.js
+- src/integrations/micro-api-channel.js
+- src/features/adjust/image-adjust-enhancement-layer.js
+- src/features/adjust/micro-adjust-output-channel.js
+- 其他前端模块中的当前版本显示与缓存标识
+
+测试与发布
+----------
+- tests/v27.8-mixed-region-prompt-bridge.test.js
+- tests/v27-micro-evolink-channel.test.js
+- tests/v27.2-micro-channel-isolation.test.js
+- tests/v27.3-conflict-isolation-regression.test.js
+- tests/v27.5-output-performance.test.js
+- tests/v27.7-region-editing-output.test.js
+- scripts/verify-project.js
+- README.txt
+- ARCHITECTURE.md
+- VERIFICATION.txt
+- V27.8-CHANGELOG.txt
+- V27.8-REGRESSION-CHECKLIST.txt
+- SHA256SUMS.txt
+
+历史发布说明已归档到 docs/history/V27.7/，不会混放在 V27.8 包根目录。

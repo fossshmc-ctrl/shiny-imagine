@@ -1,0 +1,42 @@
+V25.6 MODIFIED FILES / SOURCE VERIFICATION
+Date: 2026-08-10
+
+核心 BUG 修复（真实逻辑修改）
+1. src/features/region-workbench/region-route.js
+   - 刷新恢复改为 session refresh anchor。
+   - 删除旧 activeProjectId / 单历史项目自动恢复兜底。
+   - 空白进入写 empty anchor。
+   - 上传当前图片写 project anchor。
+   - 手动历史恢复不提升为刷新目标。
+   - 新增 refreshAnchor 独立快照槽，避免同一 projectId 的“上一次手动保存”通过 autosave 污染刷新。
+   - refresh source 只读取 anchor 指定版本，不回退 autosave/manual。
+
+2. src/core/region-refresh-anchor.js（新增）
+   - sessionStorage key: turing_region_v25_6_refresh_anchor
+   - mode=empty / project
+   - 默认 versionKey=refreshAnchor
+
+3. tests/region-refresh-anchor.test.js（新增）
+   - 覆盖空白刷新、上传锚定、历史不污染、非法锚点、禁止最近/唯一项目兜底、同 project 历史隔离。
+
+4. index.html
+   - 加载 src/core/region-refresh-anchor.js。
+   - 缓存版本升级为 25.6.0。
+
+发布版本升级
+- package.json / config.json / server.js / server.py
+- start.bat / debug-start.bat
+- 页面与运行时可见版本号升级为 V25.6。
+- scripts/verify-project.js 加入 V25.6 refresh-anchor 校验。
+
+随包文档
+- V25.6-CHANGELOG.txt
+- V25.6-REGRESSION-CHECKLIST.txt
+- VERIFICATION.txt
+- README.txt
+
+验证结果
+- npm run verify: PASS
+- node --test tests/*.test.js: 79/79 PASS
+- Node /api/health: V25.6 / build match / assetsReady=true
+- Python /api/health: V25.6 / build match / assetsReady=true

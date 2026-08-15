@@ -1,0 +1,36 @@
+V28.0 REGRESSION CHECKLIST
+===========================
+
+一、AI 修改指令
+[ ] 普通产品/装饰/背景任务仍能进入最终 Prompt。
+[ ] 手工 AI 修改指令能进入最终 Prompt。
+[ ] 文字区域任务包含“文字内容强制执行｜V28.0”。
+[ ] 文字修改时会生成 text-fidelity 高清裁剪参考图。
+[ ] 未编辑文字区域不会无故增加文字参考图。
+[ ] 回归前检发现缺失指令时，不提交 EvoLink 计费任务。
+[ ] 生成结果近似原图时只做本地告警/失败判断，不自动重复扣费任务。
+
+二、连续微调
+[ ] 默认“当前结果”时，第二次微调继承第一次确认结果。
+[ ] 切换“识别原图”后，第二次微调不继承第一次确认结果。
+[ ] 再切回“当前结果”后，可继续从最新确认结果编辑。
+[ ] 第二次点击生成不会继承第一轮 generating 状态。
+[ ] 第二轮拥有独立 generationId / performance session。
+[ ] 旧结果不会覆盖新一轮 output channel。
+
+三、项目恢复
+[ ] 保存项目包含 microBaseMode。
+[ ] 恢复项目后保留 microBaseMode。
+[ ] 上传新图片 / 恢复最初原图后自动回到“当前结果”模式。
+
+四、参考图
+[ ] 无文字任务：保持 source + layout/mask guide 链路。
+[ ] 有文字任务：追加 text-fidelity references。
+[ ] 参考图上传并发仍为 2。
+[ ] 不超过模型 maxRefs。
+
+五、发布
+[ ] /api/health 返回 V28.0 和 build v28.0-text-fidelity-sequential-base-20260814。
+[ ] 页面资源使用 ?v=28.0。
+[ ] API Key / PaddleOCR Token / Coze Token 为空。
+[ ] ZIP 不包含运行日志、__pycache__、.pyc。

@@ -1,0 +1,110 @@
+V27.5 CHANGELOG
+===============
+Release: 2026-08-13
+Build: v27.5-micro-handoff-stability-20260813
+Scope: 智能区域编辑工作台第二次微调的 preflight-only 卡死与连续运行隔离
+
+一、问题定位
+------------
+用户测试 V27.4 时，第一次微调可正常完成，第二次运行却长时间停在“正在微调生成”。截图中的“点击到出图性能仪表”只有预检约 6ms，压缩/合并、上传、提交、上游排队、模型生成、结果显示、本地检查均为“—”，EvoLink task 状态也没有 task_id。
+
+这组证据说明：
+- preflight 已成功；
+- 参考图没有开始准备；
+- 没有上传参考图；
+- 没有 POST `/images/generations`；
+- 不是 EvoLink task 排队，也不是同 API Key 上游通道占用；
+- 卡点在区域工作台向图片微调执行器的本地交接。
+
+V27.4 的交接方式是：区域同步后查找隐藏的 `[data-adj-ai-run]` 并调用 `run.click()`。该点击会进入旧的 capture-phase 参数冲突监听器；若旧监听器暂停/改写流程，或上一轮残留 `adjustState.aiBusy`，生成函数可能不被执行。旧函数在 busy 时还会静默 return，而右侧输出通道已经标记为 generating，因此形成没有超时出口的“假运行”。
+
+二、修复：隐藏 DOM 点击改为直接交接
+------------------------------------
+- `src/features/region-workbench/region-workbench.js` 不再查找或点击 `[data-adj-ai-run]`。
+- 新增直接协调器 `window.__V275_START_MICRO_ADJUST__`。
+- 区域工作台只使用原生 apply 按钮同步区域数据；同步完成后直接调用生成函数。
+- 直接调用绕过旧 capture-phase 冲突监听器，不受隐藏按钮 disabled、DOM 重绘或事件传播顺序影响。
+- 区域同步等待限制为 16 × 180ms（约 2.88 秒）；失败后明确中止，不提交计费任务。
+
+三、新增：同步 acknowledgement 门禁
+------------------------------------
+- 每次生成由 `beginGeneration()` 创建唯一 generationId。
+- `adjustGenerateCandidates()` 必须在第一次 await 之前同步写入：
+  microRunAcknowledgedAt / microRunId / microRunSessionId。
+- 直接协调器在同一调用栈内检查 acknowledgement。
+- 未确认时立即抛出 `micro_handoff_not_acknowledged`，清理 UI 状态并提示重新点击。
+- acknowledgement 成功后，才调用 `microApi.acknowledgeGeneration()` 解锁计费通道。
+- handoff 模式为 `synchronous-before-provider`，超时配置为 0，因为确认发生在任何异步参考图处理和 provider 请求之前。
+
+四、新增：浏览器端与服务端双重计费门禁
+--------------------------------------
+浏览器端 `/api/micro/images/generations` 只有在以下条件全部成立时才允许发送：
+- 当前 micro generationActive=true；
+- 请求 generationId 与 active generationId 完全一致；
+- generationMeta.handoff=accepted；
+- generationMeta.handoffAcceptedAt 已写入。
+
+服务端 Node/Python 同时要求：
+- `X-Channel: micro-adjust-v27.5`；
+- `X-Micro-Generation-Id` 非空；
+- `X-Micro-Handoff-Acknowledged: 1`。
+
+缺少任一项返回 HTTP 409 / `micro_channel_isolation_failed`，不转发给 EvoLink。Node/Python CORS allow-headers 同步加入全部微调协议头。
+
+五、修复：第二次点击不继承第一次状态
+------------------------------------
+- 每次点击创建新的 MicroPerformanceMeter sessionId。
+- 输出通道的 generating 记录只允许在相同 sessionId 内复用。
+- 第二次点击即使图片 identity 相同，也会创建新的 generation/output 记录。
+- 延迟到达的第一轮 `v275-micro-performance` 事件若 sessionId 不同，直接忽略。
+- 结果、错误、taskId 和阶段耗时不会跨轮覆盖。
+- 微调完成/失败/交接失败后强制清理 `aiBusy`、`microRunActive` 和 owned Promise。
+- busy 不再静默 return，而是返回/抛出结构化 `micro_generation_busy`，右侧立即显示明确错误。
+- 对超过 210 秒且已无 Promise 的陈旧 terminal 会话提供恢复，避免永久 sticky busy；真实仍在执行的 Promise 不会被强行并发重提。
+
+六、增强：性能仪表加入 syncMs / 流程交接
+-----------------------------------------
+- 性能阶段升级为 9 项：
+  preflight / sync / compress / upload / submit /
+  providerQueue / generation / result / postCheck。
+- 右侧仪表直接展示 `syncMs`，标签为“流程交接”。
+- 当前阶段与 handoffStatus 写入性能快照。
+- 正常运行路径应从 preflight → sync → compress 连续推进。
+- 交接失败不会再留下只有 preflight 的无限计时记录，而会进入 failed 并显示原因。
+
+七、边界与错误恢复
+------------------
+- 本地 `/api/micro/health` 请求增加 8 秒有界超时。
+- `beginGeneration()` 检测上一微调会话；真实活跃会话明确拒绝第二次计费提交。
+- 超过 210 秒的无主 stale session 可安全清理。
+- handoff 失败、区域同步超时、缺少生成处理器均明确写入性能仪表与结果通道。
+- 失败路径不自动重试 `/v1/images/generations`。
+
+八、保留 V27.4 优化
+-------------------
+- preflight save() identity-only 缓存失效修复。
+- 5 分钟完整诊断缓存与 60 秒 Credits 复用。
+- 正常生成不重复 `/models + files quota`。
+- source + layout-mask-guide 两张参考图、并发 2。
+- pending → processing → completed task 生命周期拆分。
+- 图片、下载栏、性能仪表不互相遮挡。
+
+九、版本与元数据
+----------------
+- 应用版本：V27.5 / 27.5.0。
+- Build：v27.5-micro-handoff-stability-20260813。
+- 微调协议通道：micro-adjust-v27.5。
+- 参考图计划：source+layout-mask-guide-v275。
+- 页面资源 cache query：?v=27.5。
+- Node/Python health 元数据新增：
+  directHandoff、handoffAcknowledgementGate、handoffAckMode、
+  handoffAckTimeoutMs、sequentialRunIsolation、staleRunRecoveryMs。
+
+十、测试与发布安全
+------------------
+- 新增两次连续直接交接的行为级测试。
+- 新增“处理器未 acknowledgement 时计费通道保持锁定”测试。
+- 新增第二次 output session 与第一轮延迟遥测隔离测试。
+- 新增服务端 handoff header 门禁检查。
+- 新增 region workbench 不再调用 hidden run.click() 的静态守卫。
+- 本次开发/测试不调用外部计费生图接口，不生成图片，不写入用户 API Key。

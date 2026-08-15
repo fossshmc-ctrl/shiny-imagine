@@ -1,0 +1,44 @@
+V27.3.2 REGRESSION CHECKLIST
+
+A. 智能区域微调结果布局
+[ ] 生成结果图片完整显示，结果信息条不覆盖图片底部。
+[ ] “智能区域编辑生成 / 结果名 / 候选 / 质量 / 回归状态”位于图片下方底栏。
+[ ] 结果图片本体仍可点击放大预览。
+[ ] 点击底栏空白、回归按钮、下载按钮不会误触发图片预览。
+[ ] 820px 以下窄屏时底栏换行，按钮仍完整可点。
+
+B. 下载
+[ ] “下载图片”按钮仅在已有微调结果时出现。
+[ ] 点击后打开现有明确确认式下载流程。
+[ ] JPG / JPEG / PNG / PDF 格式选择仍可用。
+[ ] 最终确认后可保存当前智能区域微调结果。
+[ ] 取消保存不报错。
+[ ] 下载模块未加载/结果为空时给出可理解提示，不触发异常页面。
+
+C. 回归检测
+[ ] 有回归记录时“查看回归检测”仍显示。
+[ ] 点击后正常打开详情。
+[ ] 回归检测状态文字仍显示在结果元信息中。
+[ ] 不会因下载功能改变回归检测逻辑或自动重新提交计费任务。
+
+D. Windows 启动
+[ ] 双击 start.bat 能识别 V27.3.2 / v27.3.2-bottom-output-download-20260813。
+[ ] Node.js 优先启动路径可用。
+[ ] 无 Node 时 Python fallback 仍可启动。
+[ ] /api/health 返回 version=V27.3.2、正确 buildId、assetsReady=true。
+[ ] 页面以 ?v=27.3.2 cache-busted URL 打开。
+
+E. 微调性能/协议保护
+[ ] /api/micro/* 独立路由保持。
+[ ] 协议 header micro-adjust-v27.3.1 保持兼容。
+[ ] Keep-Alive 保持。
+[ ] 微调参考图 2 路上传保持。
+[ ] 自适应轮询与缓存预检保持。
+[ ] 计费 generation POST 不盲目自动重试。
+
+F. 自动测试
+[ ] npm run check PASS。
+[ ] npm test 全量 PASS。
+[ ] Python fallback 测试全量 PASS。
+[ ] ZIP 完整性测试 PASS。
+[ ] 清洁解压后 npm run verify PASS。

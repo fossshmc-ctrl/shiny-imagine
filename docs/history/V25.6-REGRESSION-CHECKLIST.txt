@@ -1,0 +1,49 @@
+V25.6 REGRESSION CHECKLIST
+
+[本次 BUG：空白工作台刷新]
+[ ] 从首页进入“智能区域编辑”，保持没有载入图片。
+[ ] 点击浏览器刷新按钮，工作台仍为空白，不自动出现任何历史图片。
+[ ] F5 刷新，工作台仍为空白。
+[ ] Ctrl+R 刷新，工作台仍为空白。
+
+[本次 BUG：历史版本污染刷新目标]
+[ ] 上传图片 A，确认当前工作台显示 A。
+[ ] 打开“保存与恢复”，点击其他项目 B 的“最近自动保存”或“上一次手动保存”。
+[ ] 关闭恢复窗口后执行 F5 / Ctrl+R / 浏览器刷新。
+[ ] 自动刷新目标不得被 B 劫持；应恢复刷新锚点 A（若原本是空白锚点，则应保持空白）。
+[ ] 连续点击多个历史项目后刷新，也不能按“最后点击的历史项目”恢复。
+
+[当前图片刷新]
+[ ] 上传图片 A 后 F5，仍恢复 A。
+[ ] 更换为图片 C 后 F5，恢复 C，不恢复 A/B。
+[ ] 编辑 A 的区域并完成自动保存后刷新，恢复 A 的最新 refreshAnchor 快照。
+
+[失效数据保护]
+[ ] refresh anchor 不存在时，不自动选择最近项目。
+[ ] refresh anchor 为 empty 时，不自动选择唯一历史项目。
+[ ] refresh anchor 指向已删除项目时，刷新后保持空白，不恢复其他项目。
+[ ] localStorage 旧键 turing_region_v21_active_project 不再控制刷新恢复。
+
+[项目保存与恢复]
+[ ] 最近 5 个项目仍可在“保存与恢复”中看到。
+[ ] “最近自动保存 / 上一次手动保存 / 初始识别版本”仍可手动恢复。
+[ ] 手动恢复后的项目仍可继续查看和编辑。
+[ ] 手动恢复动作不会改写 sessionStorage 的 turing_region_v25_6_refresh_anchor。
+
+[全局路由]
+[ ] 智能区域编辑页面刷新后仍停留在 /region/canvas 或当前 region 子面板。
+[ ] 首页 / 文案 / AI线框 / AI生图 / 用户 / 审计的 V25.5 路由持久化能力未回归。
+
+[发布包]
+[ ] start.bat 控制台显示 AI Tool Web UI V25.6 Core Launcher。
+[ ] 页面标题显示 V25.6 · 图灵线框工作台。
+[ ] /api/health 返回 version=V25.6。
+[ ] /api/health 返回 buildId=v25.6-region-refresh-anchor-20260810。
+[ ] 压缩包内部根目录名称为 ai-linkuang-v25.6-refresh-session-fix-Windows，不包含 V25.5 外壳目录。
+[ ] npm run verify 全部通过。
+
+[同一项目历史版本]
+[ ] 当前项目 A 正常编辑并自动保存后，记录当前状态 A-current。
+[ ] 在同一个 A 项目中点击“上一次手动保存”恢复 A-old，但不做新的明确上传切换。
+[ ] 立即 F5 / Ctrl+R / 浏览器刷新。
+[ ] 应恢复 A-current 的 refreshAnchor 快照，不应被 A-old 覆盖。

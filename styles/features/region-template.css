@@ -1,0 +1,18 @@
+
+/* ===== V14.1：按当前颜色区域联动快捷模板 ===== */
+.v141-region-context{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px;padding:8px 9px;border:1px solid #e2e2dd;background:#fafaf8}
+.v141-region-context-main{display:flex;align-items:center;gap:7px;min-width:0}
+.v141-region-context-main i{width:10px;height:10px;border-radius:50%;background:var(--region-color);box-shadow:0 0 0 3px color-mix(in srgb,var(--region-color) 16%,transparent);flex:0 0 auto}
+.v141-region-context-main b{font-size:10px}.v141-region-context-main span{font-size:8px;color:var(--v14-muted)}
+.v141-region-kind{font-size:8px;padding:3px 6px;border:1px solid color-mix(in srgb,var(--region-color) 35%,#ddd);background:color-mix(in srgb,var(--region-color) 8%,#fff);white-space:nowrap}
+.v141-template-block{margin-top:8px}.v141-template-title{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.v141-template-title b{font-size:9px}.v141-template-title span{font-size:7px;color:var(--v14-muted)}
+.v141-template-select{width:100%;min-height:34px;font-size:9px;border:1px solid #d8d8d3;background:#fff;padding:0 8px}
+.v141-template-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;margin-top:6px}
+.v141-template-chip{min-height:34px;border:1px solid #dcdcd7;background:#fff;padding:6px 7px;text-align:left;cursor:pointer;display:flex;align-items:center;gap:6px;font-size:8px;line-height:1.25;transition:transform .14s ease,border-color .14s ease,background .14s ease}
+.v141-template-chip:hover{border-color:var(--region-color);background:color-mix(in srgb,var(--region-color) 5%,#fff);transform:translateY(-1px)}
+.v141-template-chip.on{border-color:var(--region-color);background:color-mix(in srgb,var(--region-color) 9%,#fff)}
+.v141-template-chip i{width:6px;height:6px;border-radius:50%;background:var(--region-color);flex:0 0 auto}
+.v141-template-chip:nth-child(5){grid-column:1/-1}
+.v141-editor-note{margin-top:6px;padding:6px 7px;border-left:2px solid var(--region-color);background:#fafaf8;color:var(--v14-muted);font-size:7px;line-height:1.45}
+@media(max-width:520px){.v141-template-grid{grid-template-columns:1fr}.v141-template-chip:nth-child(5){grid-column:auto}}

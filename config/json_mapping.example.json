@@ -1,0 +1,9 @@
+{
+  "mainTitle": "extracted.title",
+  "coreSellingPoint": "extracted.selling_point",
+  "functionArea": "extracted.features",
+  "subtitle1": "extracted.subtitles.0",
+  "subtitle2": "extracted.subtitles.1",
+  "subtitle3": "extracted.subtitles.2",
+  "consumerInsight": "extracted.insight"
+}

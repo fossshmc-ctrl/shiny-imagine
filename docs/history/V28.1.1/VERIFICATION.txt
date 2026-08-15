@@ -1,0 +1,42 @@
+V28.1.1 VERIFICATION
+===================
+Build: v28.1.1-performance-panel-collapse-20260814
+Version: 28.1.1
+Date: 2026-08-14
+
+Scope
+-----
+- No external image generation request was submitted during this build.
+- Source package: V27.9 Windows release supplied by the user.
+- V28.1.1 changes focus on AI instruction fidelity and sequential micro-edit base selection.
+
+Automated verification
+----------------------
+- npm run check: PASS
+- npm test: PASS
+- Test count: 214
+- Passed: 214
+- Failed: 0
+- JavaScript syntax checks: PASS
+- Python syntax check: PASS
+- Node server /api/health: PASS
+- Node /api/micro/health: PASS
+- assetsReady: true
+- API Key / PaddleOCR Token / Coze Token: blank in release config
+
+V28 behavior verification
+--------------------------
+1. Text-edit instructions are promoted into a dedicated high-priority prompt section.
+2. Exact replacement text is repeated verbatim in the final prompt.
+3. Edited text regions receive additional high-resolution text-fidelity crop references.
+4. Missing V28 text-fidelity prompt sections block billed generation before submission.
+5. Sequential micro-edit base is explicit:
+   - current = continue from latest confirmed result
+   - original = restart from recognition original
+6. New generation clicks remain session-isolated and do not inherit stale generating/output state.
+7. Project state persists microBaseMode.
+
+Health
+------
+/api/health returns V28.1.1 and the V28.1.1 build ID.
+The micro channel keeps the legacy protocol header micro-adjust-v27.8 for compatibility.

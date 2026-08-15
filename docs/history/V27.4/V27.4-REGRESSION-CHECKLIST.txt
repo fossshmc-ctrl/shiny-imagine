@@ -1,0 +1,85 @@
+V27.4 REGRESSION CHECKLIST
+==========================
+
+A. Windows 启动与版本
+--------------------
+[ ] 完整解压后双击 start.bat 可启动。
+[ ] 启动器识别 EXPECTED_VERSION=V27.4。
+[ ] 启动器识别 EXPECTED_BUILD=v27.4-micro-performance-20260813。
+[ ] 浏览器 URL 带 ?v=27.4。
+[ ] 页面标题显示“V27.4 · 图灵线框工作台”。
+[ ] /api/health 返回 version=V27.4、正确 buildId、assetsReady=true。
+[ ] /api/micro/health 返回 channelHeader=micro-adjust-v27.4。
+
+B. 配置与缓存失效
+----------------
+[ ] 保存 lastTestOk / lastTestAt / lastTestMessage 不清除完整诊断缓存。
+[ ] 仅更新远端 models 列表不清除完整诊断缓存。
+[ ] 修改 Base URL 后，完整诊断缓存和 Credits 缓存被清除。
+[ ] 修改 API Key 后，完整诊断缓存和 Credits 缓存被清除。
+[ ] 修改 Model 后，完整诊断缓存和 Credits 缓存被清除。
+[ ] API Key 不会写入发布包 config.json / copy-coze.private.json。
+
+C. 完整诊断与轻量预检
+--------------------
+[ ] 点击“API 测试”会检查 health、Credits、files quota、/models、模型能力与本地参考图转换。
+[ ] API 测试不会提交 /v1/images/generations。
+[ ] 首次生成或完整诊断缓存失效时执行一次完整诊断。
+[ ] 完整诊断成功后 5 分钟内再次生成不访问 /models 或 files quota。
+[ ] Credits 在 60 秒内再次生成不重复请求。
+[ ] Credits 超过 60 秒但完整诊断仍在 5 分钟内时，只执行轻量 Credits 检查。
+[ ] 同一生成进入 EvoLink adapter 后不会再次重复 Credits 请求。
+[ ] 没有选择微调区域时，不发起网络预检。
+
+D. 双参考图与上传
+----------------
+[ ] 微调请求只准备两张参考图。
+[ ] 第一张 role=source。
+[ ] 第二张 role=layout-mask-guide。
+[ ] 第二张图包含目标布局和青色半透明 Mask 编辑范围。
+[ ] Prompt 明确说明青色区域是编辑约束，不是最终成图内容。
+[ ] uploadConcurrency=2。
+[ ] 两张参考图可在同一批次并发上传。
+[ ] 不再出现独立 target-layout 与 combined-mask 第三张上传。
+
+E. 点击到出图性能仪表
+--------------------
+[ ] 点击“微调生成”后，预检阶段右侧立即进入“生成中”并开始计时。
+[ ] 显示 preflightMs。
+[ ] 显示 compressMs。
+[ ] 显示 uploadMs。
+[ ] 显示 submitMs。
+[ ] 显示 providerQueueMs。
+[ ] 显示 generationMs。
+[ ] 显示 resultMs。
+[ ] 显示 postCheckMs。
+[ ] resultMs 以首张结果能被浏览器加载/解码为结束点，而不是 JSON 到达。
+[ ] 性能仪表位于图片和结果操作栏下方，不遮挡图片。
+[ ] 最大耗时诊断提示与实际最大阶段一致。
+
+F. EvoLink task 状态
+-------------------
+[ ] 显示 task_id。
+[ ] 正常返回 pending → processing → completed。
+[ ] pending 到 processing 计入 providerQueueMs。
+[ ] processing 到 completed 计入 generationMs。
+[ ] 服务端缺少中间状态时，UI 用“*”标记推断状态。
+[ ] 失败/超时后停止当前任务，不自动重复提交计费 POST。
+
+G. 结果展示、检查与下载
+----------------------
+[ ] 生成图片完整显示，顶部或内部没有浮层遮挡。
+[ ] 结果信息栏位于图片下方。
+[ ] “下载图片”按钮位于结果信息栏。
+[ ] 点击下载可进入保存/下载流程。
+[ ] 首张结果显示后才进行质量、保护区域、AI 指令回归检查。
+[ ] postCheckMs 完成后结果状态更新，不触发自动计费重生。
+
+H. 兼容回归
+-----------
+[ ] AI 线框生成正常。
+[ ] 普通 AI 生图正常。
+[ ] 文案生成与 Coze 通道正常。
+[ ] OCR 与 PaddleOCR 队列重试正常。
+[ ] 历史记录、项目恢复、路由恢复正常。
+[ ] 智能区域冲突检查仍为人工提示，不写入生成 Prompt。

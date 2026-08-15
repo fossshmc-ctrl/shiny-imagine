@@ -1,0 +1,88 @@
+V27.5 MODIFIED FILES
+====================
+
+核心连续运行修复
+----------------
+- src/features/region-workbench/region-workbench.js
+  删除隐藏 `[data-adj-ai-run]` DOM click；新增直接 handoff、独立 session、syncMs、2.88 秒同步边界和明确失败路径。
+- src/features/adjust/image-adjust-enhancement-layer.js
+  新增 `__V275_START_MICRO_ADJUST__`、同步 acknowledgement、busy/terminal/stale 状态管理、owned Promise 清理和结构化返回。
+- src/features/adjust/image-adjust-core.js
+  增加 microRunActive / microRunId / microRunStartedAt / microRunHeartbeatAt / microRunAcknowledgedAt / microRunStatus / microRunSessionId 状态与重置。
+- src/features/adjust/micro-adjust-output-channel.js
+  每次点击使用独立 session；第二次不继承 generating；忽略旧 session 的延迟性能事件。
+- src/integrations/micro-api-channel.js
+  V27.5 通道、begin/acknowledge/abort 会话控制、计费 POST acknowledgement 门禁、8 秒本地 health 边界和诊断元数据。
+
+性能与参考图
+------------
+- src/core/micro-performance-meter.js
+  增加 sync 阶段、currentPhase、handoffStatus、V27.5 事件并保留 V27.4 兼容别名。
+- src/core/micro-image-transport.js
+  参考图计划升级为 source+layout-mask-guide-v275。
+- src/core/evolink-image-adapter.js
+  版本同步 V27.5；保留两图并发上传与 provider 生命周期统计。
+- src/core/region-ai-prompt.js
+  版本与 fast-v275 参考图语义同步。
+
+服务端与协议门禁
+----------------
+- server.js
+  V27.5 health/build 元数据；要求 micro-adjust-v27.5、generationId 与 X-Micro-Handoff-Acknowledged；CORS 加入微调协议头。
+- server.py
+  Node 对应的 V27.5 health/build/计费门禁与 CORS 协议头。
+- config.json
+  V27.5、buildId、microRunStaleMs、microRegionSyncTimeoutMs、handoff acknowledgement 模式与说明。
+
+界面、版本与启动器
+------------------
+- index.html
+  页面标题、所有资源 cache query 与 V27.5 加载顺序。
+- start.bat
+  EXPECTED_VERSION / EXPECTED_BUILD / URL cache query 更新。
+- package.json
+  包名、27.5.0、V27.5 根因与修复说明。
+- copy-coze.private.json
+  发布版本同步；Token 保持为空。
+- src/bootstrap/title-guard.js
+  V27.5 标题守卫。
+- src/features/region-workbench/region-route.js
+  区域工作台与页面标题版本同步。
+- src/views/home-view.js
+  首页版本同步。
+- styles/features/region-workbench.css
+  V27.5 结果区与性能仪表说明；保留兼容选择器。
+
+测试
+----
+- tests/v27.5-sequential-micro-handoff.test.js (new)
+  两次连续直接运行、未 acknowledgement 快速失败、session 遥测隔离、计费 POST 门禁、禁止 hidden run.click()。
+- tests/v27.5-smart-region-performance.test.js (renamed/updated)
+  preflight 缓存、双参考图、task 生命周期、V27.5 版本与 handoff 元数据。
+- tests/v27.5-output-performance.test.js (renamed/updated)
+  结果/下载布局、9 阶段性能仪表、点击边界和启动版本一致性。
+- tests/evolink-image-adapter.test.js
+  Adapter V27.5 版本预期。
+- tests/v27-micro-evolink-channel.test.js
+  V27.5 微调 stage 预期。
+- tests/v27.2-micro-channel-isolation.test.js
+  micro-adjust-v27.5 通道预期。
+- tests/v27.3-conflict-isolation-regression.test.js
+  支持 bounded micro health 与 handoff acknowledgement 头。
+- scripts/verify-project.js
+  V27.5 直接交接、计费门禁、session 隔离、9 阶段仪表、配置与发布文档守卫。
+
+发布文档
+--------
+- README.txt
+- ARCHITECTURE.md
+- V27.5-CHANGELOG.txt (new)
+- V27.5-REGRESSION-CHECKLIST.txt (new)
+- V27.5-MODIFIED-FILES.txt (new)
+- VERIFICATION.txt
+- SHA256SUMS.txt（最终清理后重新生成）
+
+历史归档
+--------
+- docs/history/V27.4/
+  归档上一版本 V27.4 的 CHANGELOG、回归清单和修改文件说明；包根目录只保留 V27.5 发布资料。

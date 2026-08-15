@@ -1,0 +1,44 @@
+V27.3.2 MODIFIED FILES
+
+UI / 交互
+- src/features/region-workbench/region-workbench.js
+  * 结果底栏结构
+  * 下载按钮与下载处理
+  * 按钮事件隔离
+  * 当前版本标签
+- styles/features/region-workbench.css
+  * 结果信息条由绝对定位改为图片下方正常布局
+  * 下载按钮样式
+  * 小屏响应式
+
+版本 / 启动 / 服务
+- index.html
+- start.bat
+- config.json
+- package.json
+- copy-coze.private.json
+- server.js
+- server.py
+- src/bootstrap/title-guard.js
+- src/views/home-view.js
+- src/features/region-workbench/region-route.js
+- src/features/adjust/image-adjust-core.js
+- src/features/adjust/image-adjust-enhancement-layer.js
+- src/integrations/micro-api-channel.js
+- scripts/verify-project.js
+
+测试
+- tests/v27.3.2-output-toolbar-download.test.js (new)
+- tests/v27-micro-evolink-channel.test.js
+
+发布文档
+- README.txt
+- VERIFICATION.txt
+- V27.3.2-CHANGELOG.txt (new)
+- V27.3.2-REGRESSION-CHECKLIST.txt (new)
+- V27.3.2-MODIFIED-FILES.txt (new)
+- SHA256SUMS.txt (regenerated at packaging)
+
+兼容性说明
+- src/core/micro-image-transport.js、src/core/evolink-image-adapter.js 等底层性能组件仍保留 V27.3.1 组件版本。
+- micro-adjust-v27.3.1 仍为协议通道字符串，V27.3.2 继续兼容，不作为应用版本展示。

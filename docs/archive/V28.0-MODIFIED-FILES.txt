@@ -1,0 +1,23 @@
+V28.0 MODIFIED FILES
+====================
+src/core/micro-edit-base-session.js
+src/core/micro-image-transport.js
+src/core/region-ai-prompt.js
+src/core/region-generation-regression.js
+src/core/region-prompt-state.js
+src/features/adjust/image-adjust-core.js
+src/features/adjust/image-adjust-enhancement-layer.js
+src/features/adjust/micro-adjust-output-channel.js
+src/features/region-workbench/region-workbench.js
+src/integrations/micro-api-channel.js
+src/core/evolink-image-adapter.js
+src/core/micro-performance-meter.js
+styles/features/region-workbench.css
+index.html
+server.js
+server.py
+config.json
+start.bat
+package.json
+scripts/verify-project.js
+tests/ (V28.0 metadata updates + V28 text-fidelity/sequential-base regression suite)

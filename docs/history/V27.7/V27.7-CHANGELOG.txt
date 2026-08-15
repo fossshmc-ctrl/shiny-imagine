@@ -1,0 +1,52 @@
+V27.7 CHANGELOG
+===============
+Build: v27.7-region-edit-output-stability-20260814
+Package version: 27.7.0
+Date: 2026-08-14
+
+Scope
+-----
+This release fixes three Smart Region Workbench defects without invoking an external billed image-generation task during development, tests, health checks or packaging.
+
+1. Live geometry no longer freezes after manual AI-instruction editing
+------------------------------------------------------------------
+- Added `src/core/region-prompt-state.js`.
+- Separates user-authored intent from auto-generated region geometry.
+- Rebuilds the auto section after move/resize while retaining manual requirements.
+- Uses marker `【V27.7 实时参数（自动更新）】`.
+- Migrates legacy complete-prompt overrides into manual-only state.
+- Removes the path that assigned the entire textarea to `__v271FullPromptOverride`.
+- Fixes marker parsing when the auto section starts at the beginning of the textarea.
+
+2. OCR text editing and AI-instruction linkage
+----------------------------------------------
+- Added per-region text drafts so edits do not leak between regions.
+- Supports empty-string corrections without falling back to old OCR text.
+- Added Save, Cancel, Ctrl/Cmd+Enter and Escape behavior.
+- Preserves each region's original OCR text.
+- Synchronizes corrected text to region content and the nearest document block.
+- Automatically adds deterministic replace/delete/insert requirements to the region AI instruction.
+- Restoring the original text removes the text-change requirement while preserving unrelated manual intent.
+
+3. Regression-details and image-download actions
+------------------------------------------------
+- Fixed result dialogs opening behind the full-screen Smart Region overlay.
+- Added `v277-region-modal` with z-index 100500 and active pointer events.
+- Routed regression details through the elevated region-workbench modal wrapper.
+- Routed download confirmation through the same elevated modal handling.
+- Preserved browser user-activation-aware download behavior.
+- Remote result URLs use local `/api/image-export/source?url=...` proxying.
+- Node and Python proxy routes are both retained.
+
+4. Version and regression coverage
+----------------------------------
+- Updated UI, launcher, package, API channel and health metadata to V27.7.
+- Added six V27.7 regression tests for prompt state, text linkage, modal elevation and remote-download proxying.
+- Updated compatibility tests to validate the current V27.7 protocol header and cache-busting metadata.
+- Retains V27.4 cache behavior, V27.5 sequential handoff isolation and V27.6 same-task polling/TLS recovery.
+
+Safety
+------
+- No external billed image-generation POST is executed by the automated test suite.
+- API keys and private tokens are blank in the release package.
+- Download proxy accepts public HTTP(S) image URLs and rejects private/local hosts.

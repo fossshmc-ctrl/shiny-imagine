@@ -1,0 +1,17 @@
+V28.1.1 REGRESSION CHECKLIST
+=============================
+
+Version: 28.1.1
+Build: v28.1.1-performance-panel-collapse-20260814
+
+[PASS] Performance dashboard defaults to collapsed.
+[PASS] Horizontal toggle exposes aria-expanded.
+[PASS] Expand/collapse does not rebuild or resubmit a generation task.
+[PASS] All nine telemetry phases remain available after expansion.
+[PASS] EvoLink task lifecycle remains available after expansion.
+[PASS] Polling recovery diagnostics remain available after expansion.
+[PASS] Collapse state persists through localStorage.
+[PASS] CSS hidden state removes the details from layout when collapsed.
+[PASS] Browser cache version is 28.1.1.
+[PASS] Windows launcher expected version/build matches package metadata.
+[PASS] Node test suite: 219/219 passed.

@@ -1,0 +1,63 @@
+V27.7 MODIFIED FILES
+====================
+
+New runtime module
+------------------
+- src/core/region-prompt-state.js
+
+Primary Smart Region fixes
+--------------------------
+- src/features/region-workbench/region-workbench.js
+- src/core/region-ai-prompt.js
+- styles/features/region-workbench.css
+- src/core/image-export.js (existing proxy-aware export behavior is now covered by V27.7 tests)
+- index.html
+
+Version / channel metadata and inherited runtime compatibility
+--------------------------------------------------------------
+- config.json
+- package.json
+- start.bat
+- server.js
+- server.py
+- src/bootstrap/title-guard.js
+- src/core/evolink-image-adapter.js
+- src/core/micro-image-transport.js
+- src/core/micro-performance-meter.js
+- src/features/adjust/image-adjust-core.js
+- src/features/adjust/image-adjust-enhancement-layer.js
+- src/features/adjust/micro-adjust-output-channel.js
+- src/features/region-workbench/region-route.js
+- src/integrations/micro-api-channel.js
+- src/views/home-view.js
+- network-keepalive.js
+- copy-coze.private.json
+- ARCHITECTURE.md
+
+Tests and verification
+----------------------
+- tests/v27.7-region-editing-output.test.js (new)
+- tests/evolink-image-adapter.test.js
+- tests/v27-micro-evolink-channel.test.js
+- tests/v27.2-micro-channel-isolation.test.js
+- tests/v27.3-conflict-isolation-regression.test.js
+- tests/v27.5-output-performance.test.js
+- tests/v27.5-sequential-micro-handoff.test.js
+- tests/v27.5-smart-region-performance.test.js
+- tests/v27.6-poll-route-recovery.test.js
+- scripts/verify-project.js
+
+Release documents
+-----------------
+- README.txt
+- V27.7-CHANGELOG.txt
+- V27.7-MODIFIED-FILES.txt
+- V27.7-REGRESSION-CHECKLIST.txt
+- VERIFICATION.txt
+- SHA256SUMS.txt
+
+Archived from package root
+--------------------------
+- docs/history/V27.6-CHANGELOG.txt
+- docs/history/V27.6-MODIFIED-FILES.txt
+- docs/history/V27.6-REGRESSION-CHECKLIST.txt

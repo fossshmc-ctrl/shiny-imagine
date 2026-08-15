@@ -1,0 +1,65 @@
+V27.6 REGRESSION CHECKLIST
+==========================
+
+A. Reproduce the reported second-run scenario
+---------------------------------------------
+[ ] Complete one Smart Region micro-adjust run successfully.
+[ ] Without restarting the app, prepare a second region adjustment and click Micro Generate.
+[ ] Confirm preflight → handoff → compress → upload → submit all appear.
+[ ] Confirm a task_id appears and lifecycle enters pending/processing.
+[ ] If the task passes 180 seconds, confirm the UI says it is continuing the same task_id.
+[ ] Confirm no second task_id or duplicate billed POST appears during recovery.
+[ ] Confirm a late completed response displays the image normally.
+
+B. Polling and timeout behavior
+-------------------------------
+[ ] Soft threshold is 180 seconds and does not immediately fail the run.
+[ ] Base poll budget is 360 seconds.
+[ ] Pending/processing task may extend to the bounded 480-second maximum.
+[ ] Final timeout message includes task_id guidance and explicitly states there was no resubmission.
+[ ] A task-status TLS/socket failure increments pollRetryCount.
+[ ] Read-only task GET retries no more than 3 times.
+[ ] 4xx non-retryable task errors do not loop.
+
+C. Proxy/TLS recovery
+---------------------
+[ ] The exact pre-TLS disconnect is classified as `tls_handshake` and transient.
+[ ] Auto proxy is quarantined for 90 seconds after a qualifying failure.
+[ ] Auto proxy resolution is cleared so the next route decision is fresh.
+[ ] api.evolink.ai and files-api.evolink.ai use target-scoped proxy agents.
+[ ] Invalidating one target agent does not destroy the other target agent.
+[ ] A billed generation POST is never blindly replayed after an ambiguous mid-request failure.
+
+D. Deep network diagnostics
+---------------------------
+[ ] Apifox direct and proxy rows are labelled auxiliary/advisory.
+[ ] Apifox failure with all real EvoLink checks passing produces “pass with warning”, not total failure.
+[ ] `/models`, files GET, 1×1 upload and 800×800 upload are marked authoritative.
+[ ] No Nano Banana generation task is created by the diagnostic page.
+[ ] Node and Python diagnostic responses use the same severity/required semantics.
+
+E. Existing V27.4/V27.5 behavior
+--------------------------------
+[ ] Ordinary lastTest state save does not clear preflight/Credits cache.
+[ ] Base URL/API Key/Model change clears relevant caches.
+[ ] Cached normal generation avoids repeated `/models` and files quota checks.
+[ ] Exactly two references are prepared: source + layout/mask guide.
+[ ] Both references upload concurrently with uploadConcurrency=2.
+[ ] Region workbench does not call hidden `run.click()`.
+[ ] Direct handler acknowledgement is required before billed provider POST.
+[ ] Second click receives a fresh performance/output session.
+[ ] Delayed telemetry from an old session cannot overwrite the current session.
+[ ] Result information/download/performance panel remain below the image.
+
+F. Release safety
+-----------------
+[ ] config.json apiKey is blank.
+[ ] config.json imageProvider.apiKey is blank.
+[ ] copy-coze.private.json token is blank.
+[ ] No `__pycache__`, `.pyc`, launch.log or transient runtime cache is included.
+[ ] npm run check passes.
+[ ] All Node tests pass.
+[ ] All Python tests pass.
+[ ] Node and Python `/api/health` and `/api/micro/health` pass locally.
+[ ] Internal SHA256SUMS.txt verifies from a clean extraction.
+[ ] ZIP integrity test passes.

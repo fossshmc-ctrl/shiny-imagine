@@ -1,0 +1,23 @@
+{
+  "activeProfileId": "example",
+  "profiles": [
+    {
+      "id": "example",
+      "name": "示例配置",
+      "activeVersionId": "v1",
+      "versions": [
+        {
+          "id": "v1",
+          "label": "v1",
+          "config": {
+            "baseUrl": "https://api.example.com/v1",
+            "copyModel": "text-model",
+            "endpoint": "/chat/completions",
+            "responsePath": "choices.0.message.content"
+          }
+        }
+      ]
+    }
+  ],
+  "version": "V27"
+}

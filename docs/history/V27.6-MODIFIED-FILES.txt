@@ -1,0 +1,59 @@
+V27.6 MODIFIED FILES
+====================
+
+Core network and provider recovery
+----------------------------------
+- network-resilience.js
+- network-keepalive.js
+- server.js
+- server.py
+- src/core/evolink-image-adapter.js
+
+Smart Region client channel and telemetry
+-----------------------------------------
+- src/integrations/micro-api-channel.js
+- src/core/micro-performance-meter.js
+- src/core/micro-image-transport.js
+- src/core/region-ai-prompt.js
+- src/features/adjust/image-adjust-core.js
+- src/features/adjust/image-adjust-enhancement-layer.js
+- src/features/adjust/micro-adjust-output-channel.js
+- src/features/region-workbench/region-workbench.js
+- src/features/region-workbench/region-route.js
+- styles/features/region-workbench.css
+
+Version/build and startup metadata
+----------------------------------
+- index.html
+- package.json
+- config.json
+- start.bat
+- debug-start.bat
+- open-webui.bat
+- src/bootstrap/title-guard.js
+- src/views/home-view.js
+- scripts/verify-project.js
+- copy-coze.private.json (token remains blank)
+
+Tests
+-----
+- tests/v27.6-poll-route-recovery.test.js (new)
+- tests/test_network_resilience_python.py
+- tests/evolink-image-adapter.test.js
+- tests/v27-micro-evolink-channel.test.js
+- tests/v27.2-micro-channel-isolation.test.js
+- tests/v27.3-conflict-isolation-regression.test.js
+- tests/v27.5-output-performance.test.js
+- tests/v27.5-sequential-micro-handoff.test.js
+- tests/v27.5-smart-region-performance.test.js
+
+Release documents
+-----------------
+- README.txt
+- ARCHITECTURE.md
+- V27.6-CHANGELOG.txt
+- V27.6-MODIFIED-FILES.txt
+- V27.6-REGRESSION-CHECKLIST.txt
+- VERIFICATION.txt
+- SHA256SUMS.txt
+- docs/history/V27.5/* (archived prior release documents)
