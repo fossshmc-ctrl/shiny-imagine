@@ -1,8 +1,8 @@
 {
   "name": "ai-wireframe-workbench-v29",
-  "version": "29.0.0",
+  "version": "29.1.0",
   "private": true,
-  "description": "V29 dual-runtime release for Windows local use and GitHub/Vercel preview deployments.",
+  "description": "V29.1 dual-runtime release with a Vercel wireframe preview and hosted-history fix.",
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",

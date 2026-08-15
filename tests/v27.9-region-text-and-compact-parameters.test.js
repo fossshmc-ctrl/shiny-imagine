@@ -74,7 +74,7 @@ test('V28.1.1 keeps the parameter panel open while changing count, quality, aspe
 });
 
 test('V29 release cache and current prompt aliases are loaded',()=>{
-  assert.match(html,/<title>V29 · 图灵线框工作台<\/title>/);
+  assert.match(html,/<title>V29.1 · 图灵线框工作台<\/title>/);
   assert.doesNotMatch(html,/\?v=27\.8/);
   assert.match(read('src/core/region-prompt-state.js'),/RegionPromptStateV279=api/);
   assert.match(read('src/core/region-ai-prompt.js'),/RegionAiPromptV279=api/);

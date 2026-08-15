@@ -62,7 +62,7 @@ test('V28.1.1 regression and download dialogs are promoted above the fullscreen 
 
 test('V29 prompt state loads before region workbench and remote output downloads use local proxy',()=>{
   const html=read('index.html');
-  assert.ok(html.indexOf('src/core/region-prompt-state.js?v=29.0.0')<html.indexOf('src/features/region-workbench/region-workbench.js?v=29.0.0'));
+  assert.ok(html.indexOf('src/core/region-prompt-state.js?v=29.1.0')<html.indexOf('src/features/region-workbench/region-workbench.js?v=29.1.0'));
   const exporter=require('../src/core/image-export.js');
   const oldLocation=global.location;
   global.location={href:'http://127.0.0.1:18081/workbench/',origin:'http://127.0.0.1:18081'};

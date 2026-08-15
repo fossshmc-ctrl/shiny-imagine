@@ -67,7 +67,7 @@ test('V29 release metadata preserves bounded same-task recovery and authoritativ
   assert.equal(adapter.POLL_TIMEOUT_MS,360000);
   assert.equal(adapter.POLL_MAX_TIMEOUT_MS,480000);
   const config=JSON.parse(read('config.json'));
-  assert.equal(config.version,'V29');
+  assert.equal(config.version,'V29.1');
   assert.equal(config.network.microAdjustPollSoftTimeoutMs,180000);
   assert.equal(config.network.microAdjustPollTimeoutMs,360000);
   assert.equal(config.network.microAdjustPollMaxTimeoutMs,480000);

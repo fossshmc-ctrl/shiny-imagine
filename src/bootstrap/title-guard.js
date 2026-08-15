@@ -1,7 +1,7 @@
 
 (function(){
   'use strict';
-  const APP_TITLE='V29 · 图灵线框工作台';
+  const APP_TITLE='V29.1 · 图灵线框工作台';
   window.__APP_TITLE__=APP_TITLE;
   let applying=false;
   function applyAppTitle(){

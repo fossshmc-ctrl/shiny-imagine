@@ -1,0 +1,62 @@
+V29.1 MODIFIED FILES
+====================
+
+核心修复
+--------
+src/features/wireframe/wireframe-generation.js
+  托管环境使用浏览器本地历史；清理旧临时资源项；增加运行时预览 URL 选择器。
+
+src/features/prompt/prompt-composition.js
+  生成完成后通过运行时选择器决定预览 URL，Vercel 不再采用服务端临时资源地址。
+
+server.js
+  Vercel 不再物化线框图片到 /tmp；健康检查增加线框历史/资源模式；保留访问口令保护。
+
+tests/v29.1-wireframe-hosted-preview.test.js
+  新增在线/本地分流、访问口令、旧记录清理和 Serverless 防御性回归测试。
+
+版本与启动
+----------
+package.json
+config.json
+copy-coze.private.json
+server.py
+start.bat
+debug-start.bat
+index.html
+src/bootstrap/title-guard.js
+src/views/home-view.js
+src/core/deployment-runtime.js
+.env.example
+
+构建与验证
+----------
+scripts/build-vercel.js
+scripts/verify-project.js
+tests/v29-vercel-deployment.test.js
+tests/v27.5-output-performance.test.js
+tests/v27.5-smart-region-performance.test.js
+tests/v27.6-poll-route-recovery.test.js
+tests/v27.7-region-editing-output.test.js
+tests/v27.8-mixed-region-prompt-bridge.test.js
+tests/v27.9-region-text-and-compact-parameters.test.js
+tests/v28.1.1-performance-panel-collapse.test.js
+
+文档
+----
+README.txt
+ARCHITECTURE.md
+V29.1-CHANGELOG.txt
+V29.1-DEPLOYMENT-GUIDE.txt
+V29.1-MODIFIED-FILES.txt
+V29.1-REGRESSION-CHECKLIST.txt
+docs/history/V29/*
+SHA256SUMS.txt
+
+保持不变的关键入口
+------------------
+vercel.json
+api/index.js
+src/core/image-export.js
+src/features/image/image-generation.js
+server.py 的 Windows 线框图片落盘逻辑

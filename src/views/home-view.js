@@ -9,7 +9,7 @@ function viewHome(){
   ].map(t=>`<div class="tcard ${t.soon?'soon':''}"><div class="inner" ${t.soon?'':`data-k="${t.k}"`}>
     <span class="em">${t.em}</span><h3>${t.n}</h3><p>${t.d}</p>
     ${t.soon?'<span class="soon-badge">即将上线</span>':'<span class="enter">进入</span>'}</div></div>`).join('');
-  return `<div class="home-h"><h2>V29 · 图灵线框工作台</h2><p>支持 Windows 本地运行与 GitHub / Vercel 在线预览，快速完成文案、线框、生图与智能区域编辑任务。</p></div><div class="tools">${cards}</div>`;
+  return `<div class="home-h"><h2>V29.1 · 图灵线框工作台</h2><p>支持 Windows 本地运行与 GitHub / Vercel 在线预览，已修复受口令保护时的 AI 线框图预览问题。</p></div><div class="tools">${cards}</div>`;
 }
 
 const COPY_API_CHANNEL_KEY='copyApiChannel_v123';

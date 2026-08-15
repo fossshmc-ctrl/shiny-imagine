@@ -37,6 +37,22 @@ function setWireAdvancedDebug(open){wf.advancedDebug=!!open;try{localStorage.set
 let wf={configured:false,baseUrl:'',key:'',builtin:DEFAULT_WF_PROMPT,groups:[],history:[],autoToImage:false,overviewExpanded:readWireOverviewExpanded(),advancedDebug:readWireAdvancedDebug(),promptTargetGroupIds:null,promptActiveGroupId:null,promptDiagnosisFilter:'all',issueCenterFilter:'all'};
 const WF_GENERATED_HISTORY_KEY='wfGeneratedHistory_v26_fallback';
 let wfHistoryTargetGroup=null;
+function wireHistoryHostedRuntime(){
+  try{return !!(typeof DeploymentRuntimeV29!=='undefined'&&DeploymentRuntimeV29.state&&DeploymentRuntimeV29.state.hosted);}catch(_e){return false;}
+}
+function isEphemeralWireHistoryAsset(src){return /^\/api\/wireframe-history\/assets\//i.test(String(src||'').trim());}
+function pruneHostedWireHistory(){
+  if(!wireHistoryHostedRuntime())return false;
+  const before=(wf.history||[]).length;
+  wf.history=(wf.history||[]).filter(item=>item&&item.src&&!isEphemeralWireHistoryAsset(item.src));
+  if(wf.history.length!==before)saveGeneratedWireHistory();
+  return wf.history.length!==before;
+}
+function resolveGeneratedWireResultSrc(generatedSrc,savedItem){
+  const original=String(generatedSrc||'').trim(),persisted=String(savedItem&&savedItem.src||'').trim();
+  if(wireHistoryHostedRuntime())return original;
+  return persisted||original;
+}
 function wireHistoryId(){return 'wire-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,9);}
 function loadGeneratedWireHistory(){
   try{
@@ -44,6 +60,7 @@ function loadGeneratedWireHistory(){
     if(!raw)return;
     const arr=JSON.parse(raw);
     if(Array.isArray(arr))wf.history=arr.filter(x=>x&&x.src).slice(0,30);
+    pruneHostedWireHistory();
   }catch(_e){}
 }
 function saveGeneratedWireHistory(){
@@ -62,6 +79,11 @@ async function wireHistoryFetch(url,opt){
   if(!res.ok||data.ok===false)throw new Error((data.error&&data.error.message)||data.message||('HTTP '+res.status));return data;
 }
 async function refreshGeneratedWireHistoryFromServer({migrate=true}={}){
+  if(wireHistoryHostedRuntime()){
+    pruneHostedWireHistory();
+    saveGeneratedWireHistory();
+    return wf.history;
+  }
   try{
     const data=await wireHistoryFetch('/api/wireframe-history?limit=120');const remote=Array.isArray(data.items)?data.items:[];
     if(!remote.length&&migrate&&wf.history.length){
@@ -73,11 +95,15 @@ async function refreshGeneratedWireHistoryFromServer({migrate=true}={}){
 }
 async function persistGeneratedWireHistoryItem(item){
   if(!item||!item.src)return item;
+  if(wireHistoryHostedRuntime()){
+    const idx=(wf.history||[]).findIndex(x=>x.id===item.id);if(idx>=0)wf.history[idx]=item;else wf.history.unshift(item);
+    saveGeneratedWireHistory();return item;
+  }
   const data=await wireHistoryFetch('/api/wireframe-history',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)});
   const saved=data.item||item,idx=(wf.history||[]).findIndex(x=>x.id===item.id);if(idx>=0)wf.history[idx]=saved;else wf.history.unshift(saved);saveGeneratedWireHistory();return saved;
 }
 async function deleteGeneratedWireHistoryItem(id){
-  try{await wireHistoryFetch('/api/wireframe-history/'+encodeURIComponent(id),{method:'DELETE'});}catch(_e){}
+  if(!wireHistoryHostedRuntime())try{await wireHistoryFetch('/api/wireframe-history/'+encodeURIComponent(id),{method:'DELETE'});}catch(_e){}
   wf.history=(wf.history||[]).filter(x=>x.id!==id);saveGeneratedWireHistory();
 }
 function resolveWireHistoryUseGroup(){
@@ -88,8 +114,10 @@ function resolveWireHistoryUseGroup(){
 }
 function wireHistoryModalHtml(){
   const useIndex=resolveWireHistoryUseGroup(),target=useIndex==null?null:wf.groups[useIndex];
-  const items=(wf.history||[]).length?(wf.history||[]).map((h,i)=>`<article class="wire-history-card"><button class="wire-history-thumb" type="button" data-wfhist-preview="${i}" title="预览历史线框">${h.src?`<img src="${h.src}" alt="历史线框" loading="lazy">`:'<span>无预览</span>'}</button><div class="wire-history-info"><div class="wire-history-title"><b>${esc(h.label||('历史 '+(i+1)))}</b><small>${esc(h.time||h.createdAt||'')} · ${esc(h.model||'模型未记录')}</small></div><p>${esc((h.poster||'').replace(/\s+/g,' ').slice(0,120)||'无文案摘要')}</p><div class="wire-history-actions"><button class="mini-btn" data-wfhist-preview="${i}">预览</button><button class="mini-btn" data-wfhist-use="${i}">使用</button><button class="mini-btn danger" data-wfhist-delete="${i}">删除</button></div></div></article>`).join(''):`<div class="prompt-diagnosis-empty">还没有已持久化的 AI 线框生成记录。成功生成后会自动保存到本机 data/v26。</div>`;
-  return `<h3>历史生成线框记录</h3><p class="hint">历史与当前结果已统一：每条记录只保留「预览 / 使用 / 删除」。${target?'“使用”会替换当前任务组：'+esc(target.label||'当前任务组'):'当前没有任务组，使用历史时会自动创建一组。'} 图片本体继续保存在 data/v26。</p><div class="wire-history-list">${items}</div><div class="row" style="margin-top:14px"><button class="btn btn-ghost" data-wfhist-refresh>刷新记录</button><button class="btn btn-ghost" data-mclose>关闭</button></div>`;
+  const emptyText=wireHistoryHostedRuntime()?'当前浏览器还没有 AI 线框生成记录。在线记录不会写入 Vercel 临时磁盘。':'还没有已持久化的 AI 线框生成记录。成功生成后会自动保存到本机 data/v26。';
+  const items=(wf.history||[]).length?(wf.history||[]).map((h,i)=>`<article class="wire-history-card"><button class="wire-history-thumb" type="button" data-wfhist-preview="${i}" title="预览历史线框">${h.src?`<img src="${h.src}" alt="历史线框" loading="lazy">`:'<span>无预览</span>'}</button><div class="wire-history-info"><div class="wire-history-title"><b>${esc(h.label||('历史 '+(i+1)))}</b><small>${esc(h.time||h.createdAt||'')} · ${esc(h.model||'模型未记录')}</small></div><p>${esc((h.poster||'').replace(/\s+/g,' ').slice(0,120)||'无文案摘要')}</p><div class="wire-history-actions"><button class="mini-btn" data-wfhist-preview="${i}">预览</button><button class="mini-btn" data-wfhist-use="${i}">使用</button><button class="mini-btn danger" data-wfhist-delete="${i}">删除</button></div></div></article>`).join(''):`<div class="prompt-diagnosis-empty">${emptyText}</div>`;
+  const storageHint=wireHistoryHostedRuntime()?'在线版记录仅保存在当前浏览器；图片继续使用 EvoLink 原始地址，不写入 Vercel /tmp。':'图片本体继续保存在本机 data/v26。';
+  return `<h3>历史生成线框记录</h3><p class="hint">历史与当前结果已统一：每条记录只保留「预览 / 使用 / 删除」。${target?'“使用”会替换当前任务组：'+esc(target.label||'当前任务组'):'当前没有任务组，使用历史时会自动创建一组。'} ${storageHint}</p><div class="wire-history-list">${items}</div><div class="row" style="margin-top:14px"><button class="btn btn-ghost" data-wfhist-refresh>刷新记录</button><button class="btn btn-ghost" data-mclose>关闭</button></div>`;
 }
 function useWireHistory(idx){
   const h=(wf.history||[])[idx];if(!h||!h.src){setActionStatus('error','历史线框图不存在或已失效',false);return;}
@@ -99,7 +127,7 @@ function useWireHistory(idx){
 }
 async function openHist(targetGroup){
   wfHistoryTargetGroup=Number.isInteger(targetGroup)?targetGroup:null;
-  modalOpen('<h3>历史生成线框记录</h3><p class="hint">正在读取本机历史库并整理缩略图…</p>',true);
+  modalOpen(`<h3>历史生成线框记录</h3><p class="hint">${wireHistoryHostedRuntime()?'正在读取当前浏览器的线框记录…':'正在读取本机历史库并整理缩略图…'}</p>`,true);
   await refreshGeneratedWireHistoryFromServer();modalRefresh(wireHistoryModalHtml(),true);
 }
 loadGeneratedWireHistory();

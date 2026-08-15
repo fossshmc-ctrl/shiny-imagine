@@ -3,7 +3,7 @@ setlocal EnableExtensions
 chcp 65001 >nul
 cd /d "%~dp0"
 echo ===============================================
-echo AI Tool Web UI V29 Core - Debug Start
+echo AI Tool Web UI V29.1 Core - Debug Start
 echo ===============================================
 echo This window shows full server and asset request logs.
 echo Press Ctrl+C to stop the server.

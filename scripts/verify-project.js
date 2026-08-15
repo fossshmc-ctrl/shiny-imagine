@@ -79,7 +79,7 @@ if(copyHistorySource.includes('COPY_SESSION_VIEW_KEY')||copyHistorySource.includ
 const regionAnchorSource=fs.readFileSync(path.join(root,'src/core/region-refresh-anchor.js'),'utf8');
 const regionRouteSource=fs.readFileSync(path.join(root,'src/features/region-workbench/region-route.js'),'utf8');
 if(!regionAnchorSource.includes('turing_region_v25_6_refresh_anchor')||!regionAnchorSource.includes("mode:'empty'")||!regionAnchorSource.includes("mode:'project'"))fail('V25.6 region refresh anchor module is incomplete');
-if(!html.includes('src/core/region-refresh-anchor.js?v=29.0.0'))fail('region refresh anchor is not loaded with the V27.3 cache version');
+if(!html.includes('src/core/region-refresh-anchor.js?v=29.1.0'))fail('region refresh anchor is not loaded with the V27.3 cache version');
 if(!regionRouteSource.includes('anchor=readRefreshAnchor()')||!regionRouteSource.includes('projects.find(x=>x.id===anchor.projectId)'))fail('region refresh recovery is not anchored to the current session project');
 if(regionRouteSource.includes('projects.length===1)rec=projects[0]'))fail('region refresh still auto-restores the only historical project');
 if(regionRouteSource.includes('startEpoch=mutationEpoch,active=activeProjectId()'))fail('region refresh still depends on the old active-project pointer');
@@ -104,9 +104,9 @@ const imageApiSource=fs.readFileSync(path.join(root,'src/infrastructure/api/imag
 const imageFlowSource=fs.readFileSync(path.join(root,'src/features/image/image-flow-diagnostics.js'),'utf8');
 const imageSessionSource=fs.readFileSync(path.join(root,'src/core/image-generation-session.js'),'utf8');
 const microApiSource=fs.readFileSync(path.join(root,'src/integrations/micro-api-channel.js'),'utf8');
-const evoScript='src/core/evolink-image-adapter.js?v=29.0.0';
+const evoScript='src/core/evolink-image-adapter.js?v=29.1.0';
 if(!html.includes(evoScript))fail('V26 EvoLink image adapter is not loaded');
-if(html.indexOf(evoScript)>html.indexOf('src/infrastructure/api/api-config-client.js?v=29.0.0'))fail('EvoLink adapter must load before API config client');
+if(html.indexOf(evoScript)>html.indexOf('src/infrastructure/api/api-config-client.js?v=29.1.0'))fail('EvoLink adapter must load before API config client');
 for(const token of ["DEFAULT_BASE='https://api.evolink.ai/v1'","DEFAULT_MODEL='gemini-3.1-flash-lite-image'","FILE_UPLOAD_ENDPOINT='/api/evolink/files/upload/reference'","GENERATE_ENDPOINT='/api/images/generations'",'normalizeEvolinkBase','image_urls',"'/api/tasks/'",'nano-banana-2-beta','gpt-image-2','gpt-image-1.5','doubao-seedream-5.0-lite','qwen-image-3.0','wan2.5-text-to-image','z-image-turbo','krea-2-turbo','mj-v8.1','mj-v8.1-retexture'])if(!evoSource.includes(token))fail('EvoLink adapter is missing: '+token);
 for(const token of ['isLoopbackHost','isLocalReferenceSource','prepareReferenceSource','blobToDataUrl','referenceFetchUrl'])if(!evoSource.includes(token))fail('V26 local-reference materialization is missing: '+token);
 if(!evoSource.includes("/^https?:\\/\\//i.test(s)&&!isLocalReferenceSource(s)"))fail('V26 must keep public reference URLs direct while materializing local references');
@@ -145,8 +145,8 @@ if(!localStoreSource.includes('class JsonCollection')||!localStoreSource.include
 // V27 reliable multi-format image export guards.
 const imageExportSource=fs.readFileSync(path.join(root,'src/core/image-export.js'),'utf8');
 for(const token of ['normalizeFormat','jrpg','jpegBytesToPdf','/api/image-export/source?url=','image/jpeg','application/pdf'])if(!imageExportSource.includes(token))fail('V27 image export module is missing: '+token);
-if(!html.includes('src/core/image-export.js?v=29.0.0'))fail('V27 image export module is not loaded');
-if(html.indexOf('src/core/image-export.js?v=29.0.0')>html.indexOf('src/features/image/image-generation.js?v=29.0.0'))fail('image export module must load before image generation UI');
+if(!html.includes('src/core/image-export.js?v=29.1.0'))fail('V27 image export module is not loaded');
+if(html.indexOf('src/core/image-export.js?v=29.1.0')>html.indexOf('src/features/image/image-generation.js?v=29.1.0'))fail('image export module must load before image generation UI');
 for(const token of ['data-image-export-format="${f}"','jpg','jpeg','png','pdf','runImageExportFormat'])if(!imageGenerationSource.includes(token))fail('V27 export UI/handler is missing: '+token);
 if(!routerSource.includes("e.target.closest('[data-image-export-format]')"))fail('V27 router is not wired to image export formats');
 if(!nodeServerSource.includes("'/image-export/source'")||!pythonServerSource.includes("'/image-export/source'"))fail('V27 Node/Python image download proxy parity is missing');
@@ -180,8 +180,8 @@ for(const token of ['账户 Credits / 生图额度','status===402','EvoLink 生�
 if(!imageFlowSource.includes('apiFailureInfo'))fail('V27 image flow does not reuse friendly HTTP 402 classification');
 
 // V27 generation-session / AbortSignal race guards.
-if(!html.includes('src/core/image-generation-session.js?v=29.0.0'))fail('V27 image generation session guard is not loaded');
-if(html.indexOf('src/core/image-generation-session.js?v=29.0.0')>html.indexOf('src/features/image/image-flow-diagnostics.js?v=29.0.0'))fail('image generation session guard must load before image-flow diagnostics');
+if(!html.includes('src/core/image-generation-session.js?v=29.1.0'))fail('V27 image generation session guard is not loaded');
+if(html.indexOf('src/core/image-generation-session.js?v=29.1.0')>html.indexOf('src/features/image/image-flow-diagnostics.js?v=29.1.0'))fail('image generation session guard must load before image-flow diagnostics');
 for(const token of ['stale_generation','generation_cancelled','unexpected_abort_recovered','ABORT_RE'])if(!imageSessionSource.includes(token))fail('V27 generation session helper is missing: '+token);
 for(const token of ['忽略旧会话失败回写','safeRetry=method===','不会自动重提计费请求','sessionId:generationSessionId'])if(!imageFlowSource.includes(token))fail('V27 image flow session isolation is missing: '+token);
 if(!evoSource.includes("stage:'EvoLink 参考图上传'")||!evoSource.includes('parentStage'))fail('V27 reference upload stage diagnostics are not isolated from parent generation stage');
@@ -207,11 +207,11 @@ const v2625Network=JSON.parse(fs.readFileSync(path.join(root,'config.json'),'utf
 // V27.9 Smart Region instruction, isolated channel and click-to-image performance guards.
 const regionPromptStateSource=fs.readFileSync(path.join(root,'src/core/region-prompt-state.js'),'utf8');
 const regionPromptSource=fs.readFileSync(path.join(root,'src/core/region-ai-prompt.js'),'utf8');
-if(!html.includes('src/core/region-prompt-state.js?v=29.0.0'))fail('V27.9 live region prompt-state module is not loaded');
-if(html.indexOf('src/core/region-prompt-state.js?v=29.0.0')>html.indexOf('src/core/region-ai-prompt.js?v=29.0.0')||html.indexOf('src/core/region-prompt-state.js?v=29.0.0')>html.indexOf('src/features/region-workbench/region-workbench.js?v=29.0.0'))fail('V27.9 prompt-state module must load before prompt bridge and region workbench');
+if(!html.includes('src/core/region-prompt-state.js?v=29.1.0'))fail('V27.9 live region prompt-state module is not loaded');
+if(html.indexOf('src/core/region-prompt-state.js?v=29.1.0')>html.indexOf('src/core/region-ai-prompt.js?v=29.1.0')||html.indexOf('src/core/region-prompt-state.js?v=29.1.0')>html.indexOf('src/features/region-workbench/region-workbench.js?v=29.1.0'))fail('V27.9 prompt-state module must load before prompt bridge and region workbench');
 for(const token of ['RegionPromptStateV278','RegionPromptStateV277','【V27.9 实时参数（自动更新）】','extractManual','compose','migrate','applyTextEdit','textEditInstruction','isFreeRegion','freeRegionInstruction'])if(!regionPromptStateSource.includes(token))fail('V27.9 live prompt/text state is incomplete: '+token);
-if(!html.includes('src/core/region-ai-prompt.js?v=29.0.0'))fail('V27.9 region AI prompt bridge is not loaded');
-if(html.indexOf('src/core/region-ai-prompt.js?v=29.0.0')>html.indexOf('src/features/adjust/image-adjust-core.js?v=29.0.0'))fail('V27.9 region AI prompt bridge must load before image adjust core');
+if(!html.includes('src/core/region-ai-prompt.js?v=29.1.0'))fail('V27.9 region AI prompt bridge is not loaded');
+if(html.indexOf('src/core/region-ai-prompt.js?v=29.1.0')>html.indexOf('src/features/adjust/image-adjust-core.js?v=29.1.0'))fail('V27.9 region AI prompt bridge must load before image adjust core');
 for(const token of ['最高优先级：AI 修改指令','从原位置移除主体并自然修复原位置','目标布局 + 编辑范围合并引导图','青色半透明覆盖区'])if(!regionPromptSource.includes(token))fail('V27.9 prompt bridge is incomplete: '+token);
 for(const token of ['__V271_COMMIT_ACTIVE_AI_PROMPT__','__V271_RESOLVE_REGION_PROMPT__','adjustState.regionAiTasks.push','sourceBBox','targetBBox'])if(!regionWorkbenchSource.includes(token))fail('V27.9 region workbench instruction bridge is incomplete: '+token);
 for(const token of ['regionTextDrafts:{}','data-v163-region-text-save','Ctrl+Enter 保存，Esc 取消','applyRegionTextChange','__V277_APPLY_REGION_PROMPT_EDITOR__','__V277_SYNC_REGION_PROMPT__','textEditInstruction(r)','commitActiveRegionTextDraft','__V279_COMMIT_ACTIVE_REGION_TEXT__','commitActiveDocumentBlockDraft','__V279_COMMIT_ACTIVE_DOCUMENT_TEXT__'])if(!regionWorkbenchSource.includes(token))fail('V27.9 editable copy / live prompt linkage is incomplete: '+token);
@@ -238,10 +238,10 @@ const microTransportSource=fs.readFileSync(path.join(root,'src/core/micro-image-
 const microPerformanceSource=fs.readFileSync(path.join(root,'src/core/micro-performance-meter.js'),'utf8');
 const microOutputSource=fs.readFileSync(path.join(root,'src/features/adjust/micro-adjust-output-channel.js'),'utf8');
 const keepAliveSource=fs.readFileSync(path.join(root,'network-keepalive.js'),'utf8');
-if(!html.includes('src/core/region-generation-regression.js?v=29.0.0'))fail('V27.9 region regression guard is not loaded');
-if(html.indexOf('src/core/region-generation-regression.js?v=29.0.0')>html.indexOf('src/features/adjust/image-adjust-enhancement-layer.js?v=29.0.0'))fail('V27.9 regression guard must load before enhancement layer');
-if(!html.includes('src/core/micro-performance-meter.js?v=29.0.0'))fail('V27.9 click-to-image performance meter is not loaded');
-if(html.indexOf('src/core/micro-performance-meter.js?v=29.0.0')>html.indexOf('src/integrations/micro-api-channel.js?v=29.0.0'))fail('V27.9 performance meter must load before the micro API channel');
+if(!html.includes('src/core/region-generation-regression.js?v=29.1.0'))fail('V27.9 region regression guard is not loaded');
+if(html.indexOf('src/core/region-generation-regression.js?v=29.1.0')>html.indexOf('src/features/adjust/image-adjust-enhancement-layer.js?v=29.1.0'))fail('V27.9 regression guard must load before enhancement layer');
+if(!html.includes('src/core/micro-performance-meter.js?v=29.1.0'))fail('V27.9 click-to-image performance meter is not loaded');
+if(html.indexOf('src/core/micro-performance-meter.js?v=29.1.0')>html.indexOf('src/integrations/micro-api-channel.js?v=29.1.0'))fail('V27.9 performance meter must load before the micro API channel');
 for(const token of ['data-v273-ignore-obstacles','无视阻碍继续生成','isolated-no-auto-conflict-check','ignore-known-conflicts-once'])if(!regionWorkbenchSource.includes(token))fail('V27.9 conflict isolation UI/flow is incomplete: '+token);
 for(const token of ['createExpectation','verifyBridge','analyzeImages','changedGeometryCount'])if(!regionRegressionSource.includes(token))fail('V27.9 regression helper is incomplete: '+token);
 for(const token of ['adjustTargetLayoutGuideDataUrl','targetLayoutGuideSrc','bridgeCheck','不会自动重复计费生成'])if(!(adjustCoreSource+enhancementSource).includes(token))fail('V27.9 target-layout/regression integration is incomplete: '+token);
@@ -303,8 +303,8 @@ for(const token of ['#modal.v277-region-modal','z-index:100500!important','point
 if(!imageExportSource.includes("/api/image-export/source?url="))fail('V27.9 remote result download does not use the local image proxy');
 for(const source of [nodeServerSource,pythonServerSource])if(!source.includes('/image-export/source'))fail('V27.9 local image-download proxy route is missing');
 
-const releaseVersion='V29', releaseSemver='29.0.0';
-const currentDocs=['V29-CHANGELOG.txt','V29-REGRESSION-CHECKLIST.txt','V29-MODIFIED-FILES.txt','V29-DEPLOYMENT-GUIDE.txt'];
+const releaseVersion='V29.1', releaseSemver='29.1.0';
+const currentDocs=['V29.1-CHANGELOG.txt','V29.1-REGRESSION-CHECKLIST.txt','V29.1-MODIFIED-FILES.txt','V29.1-DEPLOYMENT-GUIDE.txt'];
 const rootFiles=fs.readdirSync(root).filter(name=>fs.statSync(path.join(root,name)).isFile());
 const staleReleaseFiles=rootFiles.filter(name=>/^V\d/i.test(name)&&!currentDocs.includes(name));
 if(staleReleaseFiles.length)fail('historical release files remain in package root: '+staleReleaseFiles.join(', '));
@@ -313,23 +313,27 @@ const pkg=JSON.parse(fs.readFileSync(path.join(root,'package.json'),'utf8'));
 const cfg=JSON.parse(fs.readFileSync(path.join(root,'config.json'),'utf8'));
 if(pkg.version!==releaseSemver)fail('package.json version is not '+releaseSemver);
 if(cfg.version!==releaseVersion)fail('config.json version is not '+releaseVersion);
-if(cfg.buildId!=='v29-github-vercel-dual-runtime-20260815')fail('config.json buildId is incorrect');
+if(cfg.buildId!=='v29.1-wireframe-vercel-preview-fix-20260815')fail('config.json buildId is incorrect');
 if(cfg.baseUrl!=='https://api.evolink.ai/v1')fail('config.json EvoLink Base URL is incorrect');
 if(cfg.apiKey!=='')fail('config.json must not ship an API key');
 if(!cfg.imageProvider||cfg.imageProvider.defaultModel!=='gemini-3.1-flash-lite-image')fail('config.json imageProvider default model is missing');
-if(!html.includes('<title>V29 · 图灵线框工作台</title>'))fail('page title is not V29');
-if(!html.includes('src/core/deployment-runtime.js?v=29.0.0'))fail('V29 deployment runtime is not loaded');
-if(!html.includes('?v=29.0.0'))fail('HTML cache version is not 29.0.0');
+if(!html.includes('<title>V29.1 · 图灵线框工作台</title>'))fail('page title is not V29.1');
+if(!html.includes('src/core/deployment-runtime.js?v=29.1.0'))fail('V29.1 deployment runtime is not loaded');
+if(!html.includes('?v=29.1.0'))fail('HTML cache version is not 29.1.0');
 if(html.includes('?v=27.3.2'))fail('stale V27.3.2 cache query remains in index.html');
 const launcher=fs.readFileSync(path.join(root,'start.bat'),'utf8');
-for(const token of ['set "EXPECTED_VERSION=V29"','set "EXPECTED_BUILD=v29-github-vercel-dual-runtime-20260815"','?v=29.0.0'])if(!launcher.includes(token))fail('Windows launcher V29 metadata is incomplete: '+token);
+for(const token of ['set "EXPECTED_VERSION=V29.1"','set "EXPECTED_BUILD=v29.1-wireframe-vercel-preview-fix-20260815"','?v=29.1.0'])if(!launcher.includes(token))fail('Windows launcher V29.1 metadata is incomplete: '+token);
 
 const vercel=JSON.parse(fs.readFileSync(path.join(root,'vercel.json'),'utf8'));
 if(vercel.buildCommand!=='node scripts/build-vercel.js'||vercel.outputDirectory!=='dist')fail('V29 Vercel build/output configuration is incomplete');
 if(!Array.isArray(vercel.rewrites)||!vercel.rewrites.some(x=>x.source==='/api/:path*'&&String(x.destination).startsWith('/api/index')))fail('V29 Vercel API catch-all rewrite is missing');
 const deploymentSource=fs.readFileSync(path.join(root,'src/core/deployment-runtime.js'),'utf8');
-for(const token of ['MAX_FUNCTION_BODY_BYTES=4200000','X-App-Access-Code','vercel_payload_limit','v29-runtime-ready'])if(!deploymentSource.includes(token))fail('V29 hosted runtime guard is incomplete: '+token);
+for(const token of ['MAX_FUNCTION_BODY_BYTES=4200000','X-App-Access-Code','vercel_payload_limit','v29-runtime-ready'])if(!deploymentSource.includes(token))fail('V29.1 hosted runtime guard is incomplete: '+token);
 for(const token of ["HOSTED_RUNTIME?'vercel-serverless':'windows-local'",'AI_LINKUANG_ACCESS_CODE','EVOLINK_API_KEY','RUNTIME_DATA_ROOT','module.exports={handler:handleRequest'])if(!nodeServerSource.includes(token))fail('V29 dual-runtime server bridge is incomplete: '+token);
+for(const token of ['wireHistoryHostedRuntime','pruneHostedWireHistory','resolveGeneratedWireResultSrc','在线版记录仅保存在当前浏览器'])if(!wireGenerationSource.includes(token))fail('V29.1 hosted wireframe history guard is incomplete: '+token);
+for(const token of ['displaySrc=resolveGeneratedWireResultSrc(src,saved)','g.result.src=displaySrc'])if(!promptSource.includes(token))fail('V29.1 generated wireframe preview does not preserve the provider URL: '+token);
+for(const token of ['shouldMaterializeWireHistorySource','wireframeHistory:wireHistoryPersistenceMode()','wireframeAssets:HOSTED_RUNTIME?\'provider-url\':\'local-disk\''])if(!nodeServerSource.includes(token))fail('V29.1 server wireframe persistence split is incomplete: '+token);
+if(!nodeServerSource.includes("function shouldMaterializeWireHistorySource(src){return !HOSTED_RUNTIME"))fail('V29.1 Vercel must not materialize wireframe results into /tmp');
 const apiEntry=fs.readFileSync(path.join(root,'api/index.js'),'utf8');
 if(!apiEntry.includes("require('../server')")||!apiEntry.includes('normalizedApiUrl'))fail('V29 Vercel API entry is incomplete');
 const build=cp.spawnSync(process.execPath,['scripts/build-vercel.js'],{cwd:root,encoding:'utf8'});

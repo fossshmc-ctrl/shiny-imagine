@@ -1,9 +1,9 @@
-/* V29 GitHub/Vercel runtime bridge: access gate, managed-key bootstrap and payload guard. */
+/* V29.1 GitHub/Vercel runtime bridge: access gate, managed-key bootstrap and payload guard. */
 (function(root){
   'use strict';
   if(!root||!root.fetch)return;
 
-  const VERSION='V29';
+  const VERSION='V29.1';
   const MAX_FUNCTION_BODY_BYTES=4200000;
   const ACCESS_KEY='ai_linkuang_v29_access_code';
   const nativeFetch=root.fetch.bind(root);
@@ -60,7 +60,7 @@
   function runtimeBadge(){
     if(!state.hosted||document.querySelector('.v29-runtime-badge'))return;
     if(!document.body){document.addEventListener('DOMContentLoaded',runtimeBadge,{once:true});return;}
-    const badge=document.createElement('div');badge.className='v29-runtime-badge';badge.textContent='V29 · 在线预览版';document.body.appendChild(badge);
+    const badge=document.createElement('div');badge.className='v29-runtime-badge';badge.textContent='V29.1 · 在线预览版';document.body.appendChild(badge);
   }
   function enableVercelAnalytics(){
     if(!state.hosted||document.querySelector('script[data-v29-vercel-analytics]'))return;
@@ -72,7 +72,7 @@
     gateStyle();
     let gate=document.querySelector('.v29-access-gate');
     if(gate)return gate;
-    gate=document.createElement('div');gate.className='v29-access-gate';gate.innerHTML='<form class="v29-access-card"><h2>进入 V29 工作台</h2><p>这是小范围测试版本。请输入管理员提供的访问口令，口令只保存在当前浏览器标签页。</p><input type="password" autocomplete="current-password" placeholder="访问口令" aria-label="访问口令"><div class="v29-access-error" aria-live="polite"></div><button type="submit">验证并进入</button></form>';
+    gate=document.createElement('div');gate.className='v29-access-gate';gate.innerHTML='<form class="v29-access-card"><h2>进入 V29.1 工作台</h2><p>这是小范围测试版本。请输入管理员提供的访问口令，口令只保存在当前浏览器标签页。</p><input type="password" autocomplete="current-password" placeholder="访问口令" aria-label="访问口令"><div class="v29-access-error" aria-live="polite"></div><button type="submit">验证并进入</button></form>';
     document.body.appendChild(gate);
     const form=gate.querySelector('form'),input=gate.querySelector('input'),error=gate.querySelector('.v29-access-error'),button=gate.querySelector('button');
     form.addEventListener('submit',async event=>{

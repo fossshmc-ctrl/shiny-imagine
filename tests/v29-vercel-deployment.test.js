@@ -38,5 +38,5 @@ test('V29 keeps a critical CSS fallback for recognizable failed deployments',()=
   const html=read('index.html');
   assert.match(html,/id="v29-critical-fallback"/);
   assert.match(html,/\.ui-icon\{width:1em;height:1em;max-width:64px;max-height:64px/);
-  assert.match(html,/src\/core\/deployment-runtime\.js\?v=29\.0\.0/);
+  assert.match(html,/src\/core\/deployment-runtime\.js\?v=29\.1\.0/);
 });

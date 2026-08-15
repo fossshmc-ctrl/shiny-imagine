@@ -16,11 +16,11 @@ const {referenceCacheId,parseFileUploadResponse,shouldProtocolFallback,buildBase
 const KEEPALIVE = require('./network-keepalive');
 
 const ROOT = __dirname;
-const APP_VERSION='V29';
-const BUILD_ID='v29-github-vercel-dual-runtime-20260815';
+const APP_VERSION='V29.1';
+const BUILD_ID='v29.1-wireframe-vercel-preview-fix-20260815';
 const HOSTED_RUNTIME=!!(process.env.VERCEL||process.env.AI_LINKUANG_RUNTIME==='serverless');
 const RUNTIME_KIND=HOSTED_RUNTIME?'vercel-serverless':'windows-local';
-const RUNTIME_DATA_ROOT=HOSTED_RUNTIME?path.join('/tmp','ai-linkuang-v29'):ROOT;
+const RUNTIME_DATA_ROOT=HOSTED_RUNTIME?path.join('/tmp','ai-linkuang-v29.1'):ROOT;
 const ACCESS_CODE=String(process.env.AI_LINKUANG_ACCESS_CODE||'').trim();
 const EVOLINK_BASE='https://api.evolink.ai/v1';
 const EVOLINK_FILES_BASE='https://files-api.evolink.ai';
@@ -75,6 +75,9 @@ const V26_WIRE_HISTORY_ASSET_DIR=ensureDir(path.join(V26_DATA_DIR,'wireframe-his
 const V26_WIRE_HISTORY=new JsonCollection(path.join(V26_DATA_DIR,'wireframe-history.json'),{maxItems:120});
 const V26_IMAGE_TASKS=new JsonCollection(path.join(V26_DATA_DIR,'image-tasks.json'),{maxItems:600});
 const V26_EVOLINK_REFERENCE_CACHE=new JsonCollection(path.join(V26_DATA_DIR,'evolink-reference-cache.json'),{maxItems:500});
+
+function wireHistoryPersistenceMode(){return HOSTED_RUNTIME?'browser-local':'windows-local-disk';}
+function shouldMaterializeWireHistorySource(src){return !HOSTED_RUNTIME&&!!String(src||'').trim()&&!String(src||'').startsWith('/api/wireframe-history/assets/');}
 
 function extFromContentType(type){
   const t=String(type||'').toLowerCase();
@@ -724,9 +727,9 @@ async function proxy(req, res){
   const microChannel = rawApiPath==='/micro'||rawApiPath.startsWith('/micro/');
   const apiPath = microChannel ? (rawApiPath.slice('/micro'.length)||'/') : rawApiPath;
   if(apiPath === '/health' && req.method === 'GET'){
-    const assetState=wireframeAssetStatus(); return send(res, 200, JSON.stringify({ok:true, version:APP_VERSION, buildId:BUILD_ID, runtime:RUNTIME_KIND, rootPath:HOSTED_RUNTIME?'serverless-bundle':ROOT, assetsReady:assetState.assetsReady, missingAssets:assetState.missing, proxy:'node', port:HOSTED_RUNTIME?null:PORT, forceHostIp:FORCE_IP||null, proxyUrl:PROXY_URL||null, resolvedProxy:RESOLVED_PROXY||null, accessRequired:!!ACCESS_CODE, accessGranted:accessGranted(req), serverManaged:{evolink:!!String(process.env.EVOLINK_API_KEY||'').trim(),coze:!!String(process.env.COZE_API_TOKEN||'').trim(),paddleocr:!!String(process.env.PADDLEOCR_ACCESS_TOKEN||'').trim()}, persistence:{mode:HOSTED_RUNTIME?'ephemeral-serverless':'local-json',shared:false,durable:!HOSTED_RUNTIME}, limits:{functionBodyBytes:HOSTED_RUNTIME?4500000:null,largeImageHint:HOSTED_RUNTIME?'线上函数请求体不得超过 4.5MB；V29 会在浏览器端提前拦截并提示压缩。':''}, generationChannels:{copy:{provider:'coze',isolated:true,endpointPrefix:'/api/copy-coze/'},wireframe:{provider:'evolink-image',isolatedFromCopy:true,endpointPrefix:'/api/'},image:{provider:'evolink-image',isolatedFromCopy:true,endpointPrefix:'/api/'},referenceUpload:{provider:'evolink-files',isolatedFromGeneration:true,endpointPrefix:'/api/evolink/files/upload/'},adjust:{provider:'evolink-image-micro-adjust',isolatedFromCopy:true,isolatedFromSharedImageConfig:true,isolatedFromConflictRisk:true,conflictRiskMode:'advisory-only',channelHeader:'micro-adjust-v27.8',instructionRegression:true,baseUrl:EVOLINK_BASE,defaultModel:'gemini-3.1-flash-lite-image',diagnose:'/api/micro/diagnose',deepDiagnose:'/api/micro/network-diagnose?deep=1',endpointPrefix:'/api/micro/',routeIsolation:true,pollSoftTimeoutMs:MICRO_ADJUST_POLL_SOFT_TIMEOUT_MS,pollTimeoutMs:MICRO_ADJUST_POLL_TIMEOUT_MS,pollMaxTimeoutMs:MICRO_ADJUST_POLL_MAX_TIMEOUT_MS,pollGetRetryAttempts:3,sameTaskPolling:true,proxyTlsRecovery:true,diagnosticAdvisoryProbes:true,keepAlive:true,uploadConcurrency:2,adaptivePolling:true,fastReferencePlan:true,referencePlan:'source+layout-mask-guide+text-fidelity-v280',diagnosticCacheMs:300000,creditCacheMs:60000,fullDiagnosticsOnlyOnTestOrCacheExpiry:true,clickToImagePerformance:true,taskLifecycle:true,directHandoff:true,handoffAcknowledgementGate:true,handoffAckMode:'synchronous-before-provider',handoffAckTimeoutMs:0,sequentialRunIsolation:true,staleRunRecoveryMs:MICRO_RUN_STALE_MS}}}));
+    const assetState=wireframeAssetStatus(); return send(res, 200, JSON.stringify({ok:true, version:APP_VERSION, buildId:BUILD_ID, runtime:RUNTIME_KIND, rootPath:HOSTED_RUNTIME?'serverless-bundle':ROOT, assetsReady:assetState.assetsReady, missingAssets:assetState.missing, proxy:'node', port:HOSTED_RUNTIME?null:PORT, forceHostIp:FORCE_IP||null, proxyUrl:PROXY_URL||null, resolvedProxy:RESOLVED_PROXY||null, accessRequired:!!ACCESS_CODE, accessGranted:accessGranted(req), serverManaged:{evolink:!!String(process.env.EVOLINK_API_KEY||'').trim(),coze:!!String(process.env.COZE_API_TOKEN||'').trim(),paddleocr:!!String(process.env.PADDLEOCR_ACCESS_TOKEN||'').trim()}, persistence:{mode:HOSTED_RUNTIME?'ephemeral-serverless':'local-json',wireframeHistory:wireHistoryPersistenceMode(),wireframeAssets:HOSTED_RUNTIME?'provider-url':'local-disk',shared:false,durable:!HOSTED_RUNTIME}, limits:{functionBodyBytes:HOSTED_RUNTIME?4500000:null,largeImageHint:HOSTED_RUNTIME?'线上函数请求体不得超过 4.5MB；V29.1 会在浏览器端提前拦截并提示压缩。':''}, generationChannels:{copy:{provider:'coze',isolated:true,endpointPrefix:'/api/copy-coze/'},wireframe:{provider:'evolink-image',isolatedFromCopy:true,endpointPrefix:'/api/'},image:{provider:'evolink-image',isolatedFromCopy:true,endpointPrefix:'/api/'},referenceUpload:{provider:'evolink-files',isolatedFromGeneration:true,endpointPrefix:'/api/evolink/files/upload/'},adjust:{provider:'evolink-image-micro-adjust',isolatedFromCopy:true,isolatedFromSharedImageConfig:true,isolatedFromConflictRisk:true,conflictRiskMode:'advisory-only',channelHeader:'micro-adjust-v27.8',instructionRegression:true,baseUrl:EVOLINK_BASE,defaultModel:'gemini-3.1-flash-lite-image',diagnose:'/api/micro/diagnose',deepDiagnose:'/api/micro/network-diagnose?deep=1',endpointPrefix:'/api/micro/',routeIsolation:true,pollSoftTimeoutMs:MICRO_ADJUST_POLL_SOFT_TIMEOUT_MS,pollTimeoutMs:MICRO_ADJUST_POLL_TIMEOUT_MS,pollMaxTimeoutMs:MICRO_ADJUST_POLL_MAX_TIMEOUT_MS,pollGetRetryAttempts:3,sameTaskPolling:true,proxyTlsRecovery:true,diagnosticAdvisoryProbes:true,keepAlive:true,uploadConcurrency:2,adaptivePolling:true,fastReferencePlan:true,referencePlan:'source+layout-mask-guide+text-fidelity-v280',diagnosticCacheMs:300000,creditCacheMs:60000,fullDiagnosticsOnlyOnTestOrCacheExpiry:true,clickToImagePerformance:true,taskLifecycle:true,directHandoff:true,handoffAcknowledgementGate:true,handoffAckMode:'synchronous-before-provider',handoffAckTimeoutMs:0,sequentialRunIsolation:true,staleRunRecoveryMs:MICRO_RUN_STALE_MS}}}));
   }
-  if(!accessGranted(req))return send(res,401,JSON.stringify({ok:false,error:{code:'app_access_required',message:'请输入 V29 线上访问口令后继续使用。'}}));
+  if(!accessGranted(req))return send(res,401,JSON.stringify({ok:false,error:{code:'app_access_required',message:'请输入 V29.1 线上访问口令后继续使用。'}}));
   if(apiPath === '/image-export/source' && req.method === 'GET'){
     const startedAt=Date.now(),raw=String(requestUrl.searchParams.get('url')||'').trim();
     try{
@@ -826,7 +829,7 @@ async function proxy(req, res){
       let payload={};try{payload=JSON.parse(body.toString('utf8')||'{}');}catch(_e){return send(res,400,JSON.stringify({ok:false,error:{message:'线框历史 JSON 无效'}}));}
       const id=safeId(payload.id||('wire-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8)));
       const old=V26_WIRE_HISTORY.get(id);let src=String(payload.src||old&&old.src||'').trim();
-      if(src&&!src.startsWith('/api/wireframe-history/assets/'))src=await materializeWireHistoryImage(src,id);
+      if(shouldMaterializeWireHistorySource(src))src=await materializeWireHistoryImage(src,id);
       const item=V26_WIRE_HISTORY.upsert({
         id,label:String(payload.label||old&&old.label||'未命名线框').slice(0,180),time:String(payload.time||old&&old.time||new Date().toLocaleString('zh-CN')).slice(0,80),
         groupId:String(payload.groupId||old&&old.groupId||'').slice(0,140),poster:String(payload.poster||old&&old.poster||'').slice(0,20000),frameName:String(payload.frameName||old&&old.frameName||'').slice(0,260),
@@ -834,8 +837,8 @@ async function proxy(req, res){
         sourceTaskId:String(payload.sourceTaskId||old&&old.sourceTaskId||'').slice(0,180)
       });
       if(old&&old.src&&old.src!==item.src)removeWireHistoryAsset(old);
-      pushServerLog({method:'POST',path:'/api/wireframe-history',status:200,durationMs:Date.now()-startedAt,channel:'local persistence',message:'AI 线框历史已持久化：'+item.id});
-      return send(res,200,JSON.stringify({ok:true,item}));
+      pushServerLog({method:'POST',path:'/api/wireframe-history',status:200,durationMs:Date.now()-startedAt,channel:wireHistoryPersistenceMode(),message:(HOSTED_RUNTIME?'AI 线框历史保留上游图片地址：':'AI 线框历史已持久化：')+item.id});
+      return send(res,200,JSON.stringify({ok:true,item,persistence:wireHistoryPersistenceMode()}));
     }catch(e){pushServerLog({method:'POST',path:'/api/wireframe-history',status:500,durationMs:Date.now()-startedAt,channel:'local persistence',message:e.message});return send(res,500,JSON.stringify({ok:false,error:{message:'线框历史保存失败：'+e.message}}));}
   }
   const wireDelete=apiPath.match(/^\/wireframe-history\/([^/]+)$/);
@@ -1013,4 +1016,4 @@ if(require.main===module){
   });
 }
 
-module.exports={handler:handleRequest,apiHandler:proxy,createServer,APP_VERSION,BUILD_ID,RUNTIME_KIND};
+module.exports={handler:handleRequest,apiHandler:proxy,createServer,APP_VERSION,BUILD_ID,RUNTIME_KIND,wireHistoryPersistenceMode,shouldMaterializeWireHistorySource};

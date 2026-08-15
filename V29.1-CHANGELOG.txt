@@ -1,0 +1,47 @@
+V29.1 CHANGELOG
+================
+
+Version: V29.1 / 29.1.0
+Build: v29.1-wireframe-vercel-preview-fix-20260815
+Date: 2026-08-15
+
+一、已修复
+
+1. 修复 Vercel 设置 AI_LINKUANG_ACCESS_CODE 后，AI 线框图生成成功但右侧预览显示破损的问题。
+2. 修复 Vercel 线框历史把 EvoLink 原始图片 URL 改写为 /api/wireframe-history/assets/...，普通 img 标签因无法携带 X-App-Access-Code 而收到 401 的问题。
+3. 修复 Vercel 线框图片依赖 /tmp 临时文件的问题。线上新生成的线框图不再写入 /tmp。
+4. 修复旧 V29 浏览器历史中失效的 /api/wireframe-history/assets/... 项继续显示破损缩略图的问题；V29.1 在线环境会自动清理这些旧项。
+
+二、运行时分流
+
+1. Vercel：保留 EvoLink 返回的原始图片 URL，用于当前预览、下载和进入下一步 AI 生图。
+2. Vercel：线框历史仅保存在当前浏览器 localStorage，不再同步到 Serverless 临时磁盘。
+3. Windows Node/Python：继续把图片保存到 data/v26/wireframe-history-assets，保持原有本地持久化能力。
+4. Serverless 后端增加防御性保护：即使旧前端调用历史写入接口，线上也只保留原始 URL，不再物化到 /tmp。
+
+三、安全边界
+
+1. AI_LINKUANG_ACCESS_CODE 保持有效，没有删除访问口令。
+2. /api/wireframe-history/assets 仍在访问口令保护之后，没有改成公开资源。
+3. 没有把访问口令放入 URL、查询参数、图片地址或 localStorage。
+4. EVOLINK_API_KEY 仍只从 Vercel 服务端环境变量读取。
+
+四、兼容性
+
+1. Windows start.bat、Node server.js 和 Python server.py 启动方式保持不变。
+2. AI 生图、文案生成、智能区域编辑、PaddleOCR 和下载格式转换链路未改写。
+3. Vercel 的 vercel.json、api/index.js、dist 构建和 Analytics 接入保持兼容。
+
+五、测试
+
+新增 V29.1 专项自动测试：
+
+- 在线历史不请求 /api/wireframe-history。
+- 在线当前预览始终保留 EvoLink 原始 URL。
+- 旧 V29 临时资源历史会被清理。
+- Windows 仍接受本地持久化资源 URL。
+- Serverless 旧客户端兼容接口不会写 /tmp 图片。
+- 访问口令保护没有被放开。
+- /api/health 正确报告 browser-local / provider-url。
+
+长期多人共享历史仍需接入 Vercel Blob、OSS、S3 或 R2；V29.1 当前方案面向小范围测试。

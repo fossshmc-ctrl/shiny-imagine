@@ -3,13 +3,13 @@ setlocal EnableExtensions EnableDelayedExpansion
 chcp 65001 >nul
 cd /d "%~dp0"
 
-set "EXPECTED_VERSION=V29"
-set "EXPECTED_BUILD=v29-github-vercel-dual-runtime-20260815"
+set "EXPECTED_VERSION=V29.1"
+set "EXPECTED_BUILD=v29.1-wireframe-vercel-preview-fix-20260815"
 set "AI_TOOL_PACKAGE_ROOT=%~dp0"
 set "PORT=8787"
 for /f "usebackq delims=" %%P in (`powershell -NoProfile -ExecutionPolicy Bypass -Command "$p=8787; try{$c=Get-Content -Raw -LiteralPath '%~dp0config.json'|ConvertFrom-Json; if($c.port){$p=[int]$c.port}}catch{}; Write-Output $p" 2^>nul`) do set "PORT=%%P"
 set "URL=http://127.0.0.1:%PORT%/"
-set "OPEN_URL=%URL%?v=29.0.0^&launch=%RANDOM%%RANDOM%"
+set "OPEN_URL=%URL%?v=29.1.0^&launch=%RANDOM%%RANDOM%"
 set "LOG=%~dp0launch.log"
 
 >"%LOG%" echo [%date% %time%] Launch %EXPECTED_VERSION% / %EXPECTED_BUILD%
@@ -51,7 +51,7 @@ where node >nul 2>nul
 if not errorlevel 1 (
   set "SERVER_KIND=Node.js"
   echo Node.js detected. Starting server.js...
-  start "AI Tool V29 Core Server - Node" cmd /k "cd /d ""%~dp0"" && node server.js"
+  start "AI Tool V29.1 Core Server - Node" cmd /k "cd /d ""%~dp0"" && node server.js"
   goto wait_server
 )
 
@@ -59,7 +59,7 @@ where python >nul 2>nul
 if not errorlevel 1 (
   set "SERVER_KIND=Python"
   echo Python detected. Starting server.py...
-  start "AI Tool V29 Core Server - Python" cmd /k "cd /d ""%~dp0"" && python server.py"
+  start "AI Tool V29.1 Core Server - Python" cmd /k "cd /d ""%~dp0"" && python server.py"
   goto wait_server
 )
 
@@ -67,7 +67,7 @@ where py >nul 2>nul
 if not errorlevel 1 (
   set "SERVER_KIND=Python launcher"
   echo Python launcher detected. Starting server.py...
-  start "AI Tool V29 Core Server - Python" cmd /k "cd /d ""%~dp0"" && py server.py"
+  start "AI Tool V29.1 Core Server - Python" cmd /k "cd /d ""%~dp0"" && py server.py"
   goto wait_server
 )
 
@@ -78,14 +78,14 @@ pause
 exit /b 1
 
 :wait_server
-echo Waiting for the V29 local server and 18 built-in wireframe assets...
+echo Waiting for the V29.1 local server and 18 built-in wireframe assets...
 for /l %%I in (1,1,35) do (
   call :check_health
   if /I "!HEALTH_VERSION!"=="%EXPECTED_VERSION%" if /I "!HEALTH_BUILD!"=="%EXPECTED_BUILD%" if /I "!HEALTH_ASSETS!"=="True" if /I "!HEALTH_ROOT_MATCH!"=="True" goto server_ready
   timeout /t 1 /nobreak >nul
 )
 
-echo ERROR: V29 did not become ready within 35 seconds.
+echo ERROR: V29.1 did not become ready within 35 seconds.
 echo Health: version=!HEALTH_VERSION!, build=!HEALTH_BUILD!, assets=!HEALTH_ASSETS!, same-folder=!HEALTH_ROOT_MATCH!
 echo Check the second black window for detailed errors.
 >>"%LOG%" echo ERROR: startup timeout, version=!HEALTH_VERSION!, build=!HEALTH_BUILD!, assets=!HEALTH_ASSETS!, rootMatch=!HEALTH_ROOT_MATCH!
@@ -95,16 +95,16 @@ exit /b 1
 :server_ready
 echo Local server is ready (%SERVER_KIND%).
 echo All 18 built-in wireframe images are readable.
-echo Opening a cache-busted V29 page...
+echo Opening a cache-busted V29.1 page...
 start "" "%OPEN_URL%"
 >>"%LOG%" echo Server ready; browser opened; assets ready
 exit /b 0
 
 :open_existing
-echo This exact V29 package is already running and all wireframe assets are ready.
+echo This exact V29.1 package is already running and all wireframe assets are ready.
 echo Opening the page...
 start "" "%OPEN_URL%"
->>"%LOG%" echo Reused exact matching V29 server
+>>"%LOG%" echo Reused exact matching V29.1 server
 exit /b 0
 
 :check_health

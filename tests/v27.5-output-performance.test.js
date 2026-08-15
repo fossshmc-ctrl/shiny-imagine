@@ -59,11 +59,11 @@ test('V28.1.1 click boundary is visible during preflight and result timing waits
 });
 
 test('V29 cache-busting, title and Windows build metadata are consistent',()=>{
-  assert.match(html,/<title>V29 · 图灵线框工作台<\/title>/);
-  assert.match(html,/micro-performance-meter\.js\?v=29\.0\.0/);
-  assert.match(html,/region-workbench\.js\?v=29\.0\.0/);
+  assert.match(html,/<title>V29.1 · 图灵线框工作台<\/title>/);
+  assert.match(html,/micro-performance-meter\.js\?v=29\.1\.0/);
+  assert.match(html,/region-workbench\.js\?v=29\.1\.0/);
   assert.doesNotMatch(html,/\?v=27\.3\.2/);
-  assert.match(launcher,/EXPECTED_VERSION=V29/);
-  assert.match(launcher,/EXPECTED_BUILD=v29-github-vercel-dual-runtime-20260815/);
-  assert.match(launcher,/\?v=29\.0\.0/);
+  assert.match(launcher,/EXPECTED_VERSION=V29.1/);
+  assert.match(launcher,/EXPECTED_BUILD=v29.1-wireframe-vercel-preview-fix-20260815/);
+  assert.match(launcher,/\?v=29\.1\.0/);
 });

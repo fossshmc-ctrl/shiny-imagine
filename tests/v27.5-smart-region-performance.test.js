@@ -207,7 +207,7 @@ test('V29 package preserves cache, two-reference and lifecycle diagnostics',()=>
   const node=read('server.js'),py=read('server.py'),config=JSON.parse(read('config.json'));
   for(const token of ["channelHeader:'micro-adjust-v27.8'",'diagnosticCacheMs:300000','creditCacheMs:60000','fullDiagnosticsOnlyOnTestOrCacheExpiry:true',"referencePlan:'source+layout-mask-guide+text-fidelity-v280'",'clickToImagePerformance:true','taskLifecycle:true','directHandoff:true','handoffAcknowledgementGate:true',"handoffAckMode:'synchronous-before-provider'",'sequentialRunIsolation:true'])assert.ok(node.includes(token),token);
   for(const token of ["'channelHeader':'micro-adjust-v27.8'","'diagnosticCacheMs':300000","'creditCacheMs':60000","'referencePlan':'source+layout-mask-guide+text-fidelity-v280'","'taskLifecycle':True","'directHandoff':True","'handoffAcknowledgementGate':True","'sequentialRunIsolation':True"])assert.ok(py.includes(token),token);
-  assert.equal(config.version,'V29');
+  assert.equal(config.version,'V29.1');
   assert.equal(config.network.microUploadConcurrency,2);
   assert.equal(config.network.microPreflightCacheMs,300000);
   assert.equal(config.network.microCreditFreshMs,60000);

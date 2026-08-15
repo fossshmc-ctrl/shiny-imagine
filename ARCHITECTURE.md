@@ -1,6 +1,6 @@
-# V29 双运行时发布架构
+# V29.1 双运行时发布架构
 
-V29 在不改写原有业务模块的前提下，把发布入口拆成静态前端和同源 API 两部分。同一份源码既可双击 `start.bat` 在 Windows 长驻运行，也可由 Vercel 分别构建静态站点与 Serverless Function。
+V29.1 在不改写原有业务模块的前提下，把发布入口拆成静态前端和同源 API 两部分。同一份源码既可双击 `start.bat` 在 Windows 长驻运行，也可由 Vercel 分别构建静态站点与 Serverless Function。
 
 ## 1. 发布链路
 
@@ -18,17 +18,33 @@ V29 在不改写原有业务模块的前提下，把发布入口拆成静态前�
 ## 2. 运行时边界
 
 - Windows：`server.js` 直接运行并监听 `127.0.0.1:8787`，JSON 数据可写在解压目录。
-- Vercel：`api/index.js` 只转发一次请求给共享 handler，不启动常驻端口；可写数据重定向到 `/tmp/ai-linkuang-v29`，明确视为临时缓存。
+- Vercel：`api/index.js` 只转发一次请求给共享 handler，不启动常驻端口；可写数据重定向到 `/tmp/ai-linkuang-v29.1`，明确视为临时缓存。
 - 前端：`src/core/deployment-runtime.js` 识别线上环境，负责访问口令、托管 Key 状态、Analytics 和大请求预检。
 - API：线上只允许预设 EvoLink 主机，真实 Key 优先从 Vercel 环境变量读取，不返回浏览器。
 
-## 3. 版本与部署校验
+## 3. V29.1 线框预览与历史分流
 
-`npm run check` 会先检查 V29 版本标识、JS 语法、API 入口与 `vercel.json`，再执行静态构建并确认关键 CSS/JS/素材存在；同时确认敏感或非公开文件未进入 `dist`。`npm test` 继续运行既有功能回归与 V29 部署契约测试。
+```text
+EvoLink 返回图片 URL
+        │
+        ├─ Windows → 服务端下载图片 → data/v26 → /api/wireframe-history/assets/...
+        │
+        └─ Vercel  → 保留原始 URL → 当前浏览器 localStorage
+```
 
-## 4. 原有业务分层（历史兼容说明）
+- Windows 本地版保持原逻辑：远程图片落盘，历史记录即使上游 URL 过期仍可使用。
+- Vercel 版不再调用线框历史写入接口，也不把当前结果替换成 `/api/wireframe-history/assets/...`。
+- 线上访问口令仍保护所有同源 API；本修复没有公开任何受保护资源，也没有把口令写入 URL。
+- V29 产生在浏览器中的旧 `/api/wireframe-history/assets/...` 记录无法恢复原始上游地址，V29.1 会在托管环境自动清理这些失效记录。
+- 如需跨浏览器、跨用户、长期共享线框历史，应接入 Vercel Blob、OSS、S3 或 R2，并用数据库保存元数据。
 
-以下内容记录 V27.9 起延续至 V29 的页面状态、区域编辑和生成通道设计。V29 不改变这些业务边界，只增加发布与运行时适配。
+## 4. 版本与部署校验
+
+`npm run check` 会先检查 V29.1 版本标识、JS 语法、API 入口与 `vercel.json`，再执行静态构建并确认关键 CSS/JS/素材存在；同时确认敏感或非公开文件未进入 `dist`。`npm test` 继续运行既有功能回归与 V29.1 部署契约测试。
+
+## 5. 原有业务分层（历史兼容说明）
+
+以下内容记录 V27.9 起延续至 V29.1 的页面状态、区域编辑和生成通道设计。V29.1 不改变这些业务边界，只增加发布与运行时适配。
 
 # V27.9 前端、区域文字编辑与微调恢复架构
 

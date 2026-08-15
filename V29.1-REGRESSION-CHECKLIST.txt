@@ -1,0 +1,57 @@
+V29.1 REGRESSION CHECKLIST
+==========================
+
+一、自动验证
+
+[ ] npm run verify 退出码为 0。
+[ ] scripts/verify-project.js 检查通过。
+[ ] Node 全部测试通过，无 fail / skipped / todo。
+[ ] Python 语法检查通过。
+[ ] Vercel dist 构建成功，包含 index.html、src、styles、assets、version.json。
+[ ] dist 不包含 config.json、copy-coze.private.json、server.js、server.py、data、tests。
+[ ] ZIP 解压测试通过，压缩包内没有多套一层同名目录。
+[ ] SHA256SUMS.txt 校验通过。
+
+二、Vercel AI 线框专项
+
+[ ] Vercel 已配置 AI_LINKUANG_ACCESS_CODE、EVOLINK_API_KEY、EVOLINK_BASE_URL。
+[ ] 首次打开页面仍出现访问口令框。
+[ ] 输错口令时无法调用受保护 API。
+[ ] 正确口令进入后可以生成 AI 线框图。
+[ ] 右侧 AI 线框预览完整显示，不出现破损图片图标。
+[ ] 放大预览使用同一张完整图片。
+[ ] 下载当前线框图成功，文件内容完整。
+[ ] 点击“下一步：AI 生图”后线框图可作为参考图继续使用。
+[ ] F12 Network 中本次生成不产生新的 /api/wireframe-history/assets/... 请求。
+[ ] F12 Network 中没有 app_access_required 造成的线框图片 401。
+[ ] 当前浏览器刷新后可看到本浏览器保存的有效线框历史。
+[ ] 旧 V29 的 /api/wireframe-history/assets/... 破损历史项会被自动清理。
+[ ] /api/health 返回 version=V29.1、runtime=vercel-serverless。
+[ ] /api/health 的 persistence.wireframeHistory=browser-local。
+[ ] /api/health 的 persistence.wireframeAssets=provider-url。
+
+三、Windows 本地版
+
+[ ] 双击 start.bat 可以启动。
+[ ] /api/health 返回 V29.1 和正确 buildId。
+[ ] 18 张内置线框素材全部就绪。
+[ ] 本地生成 AI 线框图可正常预览和下载。
+[ ] 本地生成完成后 data/v26/wireframe-history-assets 出现对应图片。
+[ ] 关闭并重新启动后，本地线框历史仍可打开。
+[ ] Node 不存在时 Python 启动入口仍可使用。
+
+四、既有功能回归
+
+[ ] 文案生成返回并显示 8 个版本。
+[ ] AI 生图可以正常生成、预览和下载。
+[ ] JPG、JPEG、PNG、PDF 下载正常。
+[ ] 智能区域编辑可以读取区域、修改指令并生成结果。
+[ ] 性能仪表盘仍可展开和收起。
+[ ] 页面刷新可恢复正确的顶层页面。
+[ ] 大于线上限制的请求仍出现中文 4.5MB 提示。
+[ ] Vercel Analytics 正常加载。
+
+五、上线判定
+
+必须通过：Vercel AI 线框专项全部项目、Windows 启动、自动验证、AI 生图回归。
+如果仅历史跨浏览器不共享，不算 V29.1 缺陷；这是当前小范围测试方案的明确限制。

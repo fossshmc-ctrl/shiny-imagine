@@ -1,0 +1,28 @@
+V29 REGRESSION CHECKLIST
+
+已自动验证（2026-08-15）：
+
+[x] node scripts/build-vercel.js 成功生成 dist。
+[x] dist 只包含 index.html、version.json、assets、src、styles。
+[x] dist 不包含 server.js、config.json、copy-coze.private.json、data、tests。
+[x] node scripts/verify-project.js 通过：76 个 HTML 资源、18 张内置 JPEG、全部 src JavaScript 模块就绪。
+[x] Node 回归：223/223 通过。
+[x] Python 回归：17/17 通过。
+[x] 本地 Node HTTP 冒烟：HTML、CSS、JS、JPEG、/api/health 均为 200 且 MIME 正确。
+[x] 模拟 Vercel Function 冒烟：runtime、访问口令 401/200、服务端托管 Key 状态正确。
+[x] /api 路由保留原始子路径和查询参数。
+[x] 线上模式不探测 127.0.0.1 本机代理。
+[x] 超 4.2MB 浏览器 API 请求发送前拦截逻辑已纳入部署契约测试。
+[x] 首页/导航 SVG 有关键兜底尺寸规则。
+[x] V28.1.1 微调基图模式、文字忠实度、性能仪表盘折叠回归继续通过。
+
+部署后人工验收：
+
+[ ] Windows start.bat 返回 V29 / 正确 buildId / 18 张素材就绪。
+[ ] Vercel /api/health 返回 runtime=vercel-serverless。
+[ ] 浏览器 Network 中首页 CSS、JS 和 18 张内置图片请求均为 200，且不返回 HTML。
+[ ] 首页导航、卡片、图标布局正常，没有巨大黑色 SVG。
+[ ] 设置访问口令时首次进入显示验证框，错误口令被拒绝，正确口令可进入。
+[ ] EVOLINK_API_KEY 设置后浏览器使用 server-managed 占位，不泄露真实 Key。
+[ ] 使用一张小图片完成一次真实生成或微调测试。
+[ ] 如需统计，Analytics 已在 Vercel 后台 Enable，并能看到访问数据。

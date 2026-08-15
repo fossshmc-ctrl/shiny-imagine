@@ -72,7 +72,7 @@ startGen = async function(i){
     const src = images[0];
     g.generating=false;g.lastGenerateError=''; g.result={time:nowStr(), src};
     const hist=addGeneratedWireHistory(g,i,src,{model:API_BRIDGE.wireModel,prompt:composeWirePrompt(g,i),status:'completed'});
-    try{const saved=await persistGeneratedWireHistoryItem(hist);if(saved&&saved.src){g.result.src=saved.src;hist.src=saved.src;}}catch(historyErr){dbgLog({ok:false,endpoint:'/api/wireframe-history',model:API_BRIDGE.wireModel,status:0,error:'线框历史持久化失败：'+historyErr.message,channel:'V26 本地历史库'});apiToast('线框已生成，但历史库保存失败；本次结果仍可继续使用。',true);}
+    try{const saved=await persistGeneratedWireHistoryItem(hist),displaySrc=resolveGeneratedWireResultSrc(src,saved);g.result.src=displaySrc;hist.src=displaySrc;}catch(historyErr){dbgLog({ok:false,endpoint:'/api/wireframe-history',model:API_BRIDGE.wireModel,status:0,error:'线框历史持久化失败：'+historyErr.message,channel:'V29.1 线框历史库'});apiToast('线框已生成，但历史库保存失败；本次结果仍可继续使用。',true);}
     renderWireframe();actionDone(actionKey,'AI 线框图生成成功并已保存历史');
     if(wf.autoToImage){setTimeout(()=>toNextImage(i),500);}
   }catch(err){g.generating=false;g.lastGenerateError=String(err&&err.message||err||'未知错误');if(previousResult)g.result=previousResult;renderWireframe();actionFail(actionKey,'线框生成失败：'+g.lastGenerateError);}

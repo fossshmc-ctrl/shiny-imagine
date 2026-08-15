@@ -112,10 +112,10 @@ test('V28.1.1 browser wiring exposes current aliases and seeds newly created fre
 
 test('V29 loads prompt state and prompt bridge before generation consumers with a fresh cache key',()=>{
   const html=read('index.html');
-  const stateAt=html.indexOf('src/core/region-prompt-state.js?v=29.0.0');
-  const bridgeAt=html.indexOf('src/core/region-ai-prompt.js?v=29.0.0');
-  const coreAt=html.indexOf('src/features/adjust/image-adjust-core.js?v=29.0.0');
-  const workbenchAt=html.indexOf('src/features/region-workbench/region-workbench.js?v=29.0.0');
+  const stateAt=html.indexOf('src/core/region-prompt-state.js?v=29.1.0');
+  const bridgeAt=html.indexOf('src/core/region-ai-prompt.js?v=29.1.0');
+  const coreAt=html.indexOf('src/features/adjust/image-adjust-core.js?v=29.1.0');
+  const workbenchAt=html.indexOf('src/features/region-workbench/region-workbench.js?v=29.1.0');
   assert.ok(stateAt>=0&&bridgeAt>stateAt&&coreAt>bridgeAt&&workbenchAt>coreAt,{stateAt,bridgeAt,coreAt,workbenchAt});
   assert.doesNotMatch(html,/\?v=27\.7/);
 });

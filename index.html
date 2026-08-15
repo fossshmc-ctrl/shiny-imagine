@@ -3,35 +3,35 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="application-name" content="图灵线框工作台 V29" />
-<title>V29 · 图灵线框工作台</title>
+<meta name="application-name" content="图灵线框工作台 V29.1" />
+<title>V29.1 · 图灵线框工作台</title>
 <base href="/">
-<script src="src/bootstrap/title-guard.js?v=29.0.0"></script>
-<script src="src/core/deployment-runtime.js?v=29.0.0"></script>
+<script src="src/bootstrap/title-guard.js?v=29.1.0"></script>
+<script src="src/core/deployment-runtime.js?v=29.1.0"></script>
 <style id="v29-critical-fallback">
-/* V29 critical fallback: prevents unbounded SVGs/unstyled layout if a deployment drops CSS assets. */
+/* V29.1 critical fallback: prevents unbounded SVGs/unstyled layout if a deployment drops CSS assets. */
 html,body{min-height:100%;margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif}
 .app{display:flex;flex-direction:row-reverse;min-height:100vh}.side{width:260px;flex:0 0 260px}.main{flex:1;min-width:0}
 .ui-icon{width:1em;height:1em;max-width:64px;max-height:64px;display:inline-block;fill:none;stroke:currentColor}
 .nav .ui-icon{width:22px;height:22px}.tcard .ui-icon{width:44px;height:44px}
 </style>
-<link rel="stylesheet" href="styles/base/layout.css?v=29.0.0">
-<link rel="stylesheet" href="styles/base/theme-motion.css?v=29.0.0">
-<link rel="stylesheet" href="styles/features/copy-workbench.css?v=29.0.0">
-<link rel="stylesheet" href="styles/features/channel-status.css?v=29.0.0">
-<link rel="stylesheet" href="styles/features/wireframe-workbench.css?v=29.0.0">
-<link rel="stylesheet" href="styles/features/image-adjust-core.css?v=29.0.0">
-<link rel="stylesheet" href="styles/features/region-workbench.css?v=29.0.0">
-<link rel="stylesheet" href="styles/features/layer-protection-autosave.css?v=29.0.0">
-<link rel="stylesheet" href="styles/features/image-adjust-layout.css?v=29.0.0">
-<link rel="stylesheet" href="styles/features/region-template.css?v=29.0.0">
-<link rel="stylesheet" href="styles/features/parameter-conflict.css?v=29.0.0">
-<link rel="stylesheet" href="styles/features/multi-template.css?v=29.0.0">
-<link rel="stylesheet" href="styles/features/stable-combo.css?v=29.0.0">
-<link rel="stylesheet" href="styles/features/undo-command.css?v=29.0.0">
-<link rel="stylesheet" href="styles/features/project-menu.css?v=29.0.0">
-<link rel="stylesheet" href="styles/features/order-protection.css?v=29.0.0">
-<link rel="stylesheet" href="styles/features/paddleocr-cloud.css?v=29.0.0">
+<link rel="stylesheet" href="styles/base/layout.css?v=29.1.0">
+<link rel="stylesheet" href="styles/base/theme-motion.css?v=29.1.0">
+<link rel="stylesheet" href="styles/features/copy-workbench.css?v=29.1.0">
+<link rel="stylesheet" href="styles/features/channel-status.css?v=29.1.0">
+<link rel="stylesheet" href="styles/features/wireframe-workbench.css?v=29.1.0">
+<link rel="stylesheet" href="styles/features/image-adjust-core.css?v=29.1.0">
+<link rel="stylesheet" href="styles/features/region-workbench.css?v=29.1.0">
+<link rel="stylesheet" href="styles/features/layer-protection-autosave.css?v=29.1.0">
+<link rel="stylesheet" href="styles/features/image-adjust-layout.css?v=29.1.0">
+<link rel="stylesheet" href="styles/features/region-template.css?v=29.1.0">
+<link rel="stylesheet" href="styles/features/parameter-conflict.css?v=29.1.0">
+<link rel="stylesheet" href="styles/features/multi-template.css?v=29.1.0">
+<link rel="stylesheet" href="styles/features/stable-combo.css?v=29.1.0">
+<link rel="stylesheet" href="styles/features/undo-command.css?v=29.1.0">
+<link rel="stylesheet" href="styles/features/project-menu.css?v=29.1.0">
+<link rel="stylesheet" href="styles/features/order-protection.css?v=29.1.0">
+<link rel="stylesheet" href="styles/features/paddleocr-cloud.css?v=29.1.0">
 
 
 </head>
@@ -64,63 +64,63 @@ html,body{min-height:100%;margin:0;font-family:-apple-system,BlinkMacSystemFont,
 <div id="toast"></div>
 <div id="actionStatus"></div>
 
-<script src="src/core/asset-url.js?v=29.0.0"></script>
-<script src="src/core/channel-isolation.js?v=29.0.0"></script>
-<script src="src/core/generation-channel-status.js?v=29.0.0"></script>
-<script src="src/core/latest-request-gate.js?v=29.0.0"></script>
-<script src="src/core/elapsed-timer.js?v=29.0.0"></script>
-<script src="src/core/copy-rules.js?v=29.0.0"></script>
-<script src="src/core/copy-snapshot-store.js?v=29.0.0"></script>
-<script src="src/core/route-persistence.js?v=29.0.0"></script>
-<script src="src/core/region-refresh-anchor.js?v=29.0.0"></script>
-<script src="src/core/json-utils.js?v=29.0.0"></script>
-<script src="src/core/evolink-image-adapter.js?v=29.0.0"></script>
-<script src="src/core/micro-image-transport.js?v=29.0.0"></script>
-<script src="src/core/micro-edit-base-session.js?v=29.0.0"></script>
-<script src="src/core/micro-performance-meter.js?v=29.0.0"></script>
-<script src="src/core/image-export.js?v=29.0.0"></script>
-<script src="src/core/region-prompt-state.js?v=29.0.0"></script>
-<script src="src/core/region-ai-prompt.js?v=29.0.0"></script>
-<script src="src/core/region-generation-regression.js?v=29.0.0"></script>
-<script src="src/core/wireframe-library-state.js?v=29.0.0"></script>
-<script src="src/core/wireframe-overview-state.js?v=29.0.0"></script>
-<script src="src/data/reference-content.js?v=29.0.0"></script>
-<script src="src/app/state-ui.js?v=29.0.0"></script>
-<script src="src/views/home-view.js?v=29.0.0"></script>
-<script src="src/features/copy/copy-api-profiles.js?v=29.0.0"></script>
-<script src="src/features/copy/copy-history.js?v=29.0.0"></script>
-<script src="src/features/copy/copy-workbench.js?v=29.0.0"></script>
-<script src="src/features/wireframe/wireframe-generation.js?v=29.0.0"></script>
-<script src="src/features/wireframe/wireframe-persistence.js?v=29.0.0"></script>
-<script src="src/features/wireframe/wireframe-library.js?v=29.0.0"></script>
-<script src="src/components/wireframe-picker.js?v=29.0.0"></script>
-<script src="src/features/image/image-generation.js?v=29.0.0"></script>
-<script src="src/features/adjust/image-adjust-core.js?v=29.0.0"></script>
-<script src="src/app/page-state-lifecycle.js?v=29.0.0"></script>
-<script src="src/app/router-events.js?v=29.0.0"></script>
-<script src="src/infrastructure/api/api-config-client.js?v=29.0.0"></script>
-<script src="src/components/generation-channel-status-card.js?v=29.0.0"></script>
-<script src="src/infrastructure/api/image-api-client.js?v=29.0.0"></script>
-<script src="src/features/prompt/prompt-composition.js?v=29.0.0"></script>
-<script src="src/features/adjust/image-adjust-enhancement-layer.js?v=29.0.0"></script>
-<script src="src/features/adjust/layer-protection-autosave.js?v=29.0.0"></script>
-<script src="src/features/adjust/image-adjust-workbench.js?v=29.0.0"></script>
-<script src="src/features/adjust/region-template.js?v=29.0.0"></script>
-<script src="src/features/adjust/parameter-conflict.js?v=29.0.0"></script>
-<script src="src/features/adjust/multi-template.js?v=29.0.0"></script>
-<script src="src/features/adjust/stable-combo.js?v=29.0.0"></script>
-<script src="src/features/adjust/undo-command.js?v=29.0.0"></script>
-<script src="src/features/adjust/project-menu.js?v=29.0.0"></script>
-<script src="src/features/adjust/order-protection.js?v=29.0.0"></script>
-<script src="src/features/adjust/paddleocr-cloud.js?v=29.0.0"></script>
-<script src="src/features/adjust/micro-adjust-output-channel.js?v=29.0.0"></script>
-<script src="src/core/image-generation-session.js?v=29.0.0"></script>
-<script src="src/features/image/image-flow-diagnostics.js?v=29.0.0"></script>
+<script src="src/core/asset-url.js?v=29.1.0"></script>
+<script src="src/core/channel-isolation.js?v=29.1.0"></script>
+<script src="src/core/generation-channel-status.js?v=29.1.0"></script>
+<script src="src/core/latest-request-gate.js?v=29.1.0"></script>
+<script src="src/core/elapsed-timer.js?v=29.1.0"></script>
+<script src="src/core/copy-rules.js?v=29.1.0"></script>
+<script src="src/core/copy-snapshot-store.js?v=29.1.0"></script>
+<script src="src/core/route-persistence.js?v=29.1.0"></script>
+<script src="src/core/region-refresh-anchor.js?v=29.1.0"></script>
+<script src="src/core/json-utils.js?v=29.1.0"></script>
+<script src="src/core/evolink-image-adapter.js?v=29.1.0"></script>
+<script src="src/core/micro-image-transport.js?v=29.1.0"></script>
+<script src="src/core/micro-edit-base-session.js?v=29.1.0"></script>
+<script src="src/core/micro-performance-meter.js?v=29.1.0"></script>
+<script src="src/core/image-export.js?v=29.1.0"></script>
+<script src="src/core/region-prompt-state.js?v=29.1.0"></script>
+<script src="src/core/region-ai-prompt.js?v=29.1.0"></script>
+<script src="src/core/region-generation-regression.js?v=29.1.0"></script>
+<script src="src/core/wireframe-library-state.js?v=29.1.0"></script>
+<script src="src/core/wireframe-overview-state.js?v=29.1.0"></script>
+<script src="src/data/reference-content.js?v=29.1.0"></script>
+<script src="src/app/state-ui.js?v=29.1.0"></script>
+<script src="src/views/home-view.js?v=29.1.0"></script>
+<script src="src/features/copy/copy-api-profiles.js?v=29.1.0"></script>
+<script src="src/features/copy/copy-history.js?v=29.1.0"></script>
+<script src="src/features/copy/copy-workbench.js?v=29.1.0"></script>
+<script src="src/features/wireframe/wireframe-generation.js?v=29.1.0"></script>
+<script src="src/features/wireframe/wireframe-persistence.js?v=29.1.0"></script>
+<script src="src/features/wireframe/wireframe-library.js?v=29.1.0"></script>
+<script src="src/components/wireframe-picker.js?v=29.1.0"></script>
+<script src="src/features/image/image-generation.js?v=29.1.0"></script>
+<script src="src/features/adjust/image-adjust-core.js?v=29.1.0"></script>
+<script src="src/app/page-state-lifecycle.js?v=29.1.0"></script>
+<script src="src/app/router-events.js?v=29.1.0"></script>
+<script src="src/infrastructure/api/api-config-client.js?v=29.1.0"></script>
+<script src="src/components/generation-channel-status-card.js?v=29.1.0"></script>
+<script src="src/infrastructure/api/image-api-client.js?v=29.1.0"></script>
+<script src="src/features/prompt/prompt-composition.js?v=29.1.0"></script>
+<script src="src/features/adjust/image-adjust-enhancement-layer.js?v=29.1.0"></script>
+<script src="src/features/adjust/layer-protection-autosave.js?v=29.1.0"></script>
+<script src="src/features/adjust/image-adjust-workbench.js?v=29.1.0"></script>
+<script src="src/features/adjust/region-template.js?v=29.1.0"></script>
+<script src="src/features/adjust/parameter-conflict.js?v=29.1.0"></script>
+<script src="src/features/adjust/multi-template.js?v=29.1.0"></script>
+<script src="src/features/adjust/stable-combo.js?v=29.1.0"></script>
+<script src="src/features/adjust/undo-command.js?v=29.1.0"></script>
+<script src="src/features/adjust/project-menu.js?v=29.1.0"></script>
+<script src="src/features/adjust/order-protection.js?v=29.1.0"></script>
+<script src="src/features/adjust/paddleocr-cloud.js?v=29.1.0"></script>
+<script src="src/features/adjust/micro-adjust-output-channel.js?v=29.1.0"></script>
+<script src="src/core/image-generation-session.js?v=29.1.0"></script>
+<script src="src/features/image/image-flow-diagnostics.js?v=29.1.0"></script>
 
-<script src="src/integrations/copy-coze-channel.js?v=29.0.0"></script>
-<script src="src/integrations/micro-api-channel.js?v=29.0.0"></script>
-<script src="src/infrastructure/api/channel-runtime.js?v=29.0.0"></script>
-<script src="src/features/region-workbench/region-workbench.js?v=29.0.0"></script>
-<script src="src/features/region-workbench/region-route.js?v=29.0.0"></script>
+<script src="src/integrations/copy-coze-channel.js?v=29.1.0"></script>
+<script src="src/integrations/micro-api-channel.js?v=29.1.0"></script>
+<script src="src/infrastructure/api/channel-runtime.js?v=29.1.0"></script>
+<script src="src/features/region-workbench/region-workbench.js?v=29.1.0"></script>
+<script src="src/features/region-workbench/region-route.js?v=29.1.0"></script>
 </body>
 </html>

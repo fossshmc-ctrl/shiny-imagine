@@ -19,8 +19,8 @@ import paddleocr_cloud_service
 import copy_coze_token
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-APP_VERSION = 'V29'
-BUILD_ID = 'v29-github-vercel-dual-runtime-20260815'
+APP_VERSION = 'V29.1'
+BUILD_ID = 'v29.1-wireframe-vercel-preview-fix-20260815'
 EVOLINK_BASE = 'https://api.evolink.ai/v1'
 EVOLINK_FILES_BASE = 'https://files-api.evolink.ai'
 EVOLINK_IMAGE_MODELS = ['gemini-3.1-flash-lite-image', 'gemini-3.1-flash-image-preview', 'gemini-3-pro-image-preview', 'nano-banana-pro-beta', 'nano-banana-2-beta', 'nano-banana-2-lite-beta', 'nano-banana-beta', 'gemini-2.5-flash-image', 'gpt-image-2', 'gpt-image-2-beta', 'gpt-image-1.5', 'doubao-seedream-5.0-pro', 'doubao-seedream-5.0-lite', 'doubao-seedream-4.5', 'doubao-seedream-4.0', 'qwen-image-3.0', 'qwen-image-3.0-pro', 'qwen-image-edit', 'qwen-image-edit-plus', 'wan2.5-text-to-image', 'wan2.5-image-to-image', 'z-image-turbo', 'krea-2-turbo', 'mj-v8.1', 'mj-v8.1-retexture', 'mj-v8.1-remove-bg', 'mj-v7', 'mj-v7-retexture', 'mj-v7-remove-bg']

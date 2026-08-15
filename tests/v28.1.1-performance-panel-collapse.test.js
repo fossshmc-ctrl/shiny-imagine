@@ -45,10 +45,10 @@ test('V28.1.1 compact performance bar uses the full available width and does not
 });
 
 test('V29 release metadata is consistent',()=>{
-  assert.equal(pkg.version,'29.0.0');
-  assert.equal(config.version,'V29');
-  assert.match(config.buildId,/v29-github-vercel-dual-runtime-20260815/);
-  assert.match(start,/EXPECTED_VERSION=V29/);
-  assert.match(start,/EXPECTED_BUILD=v29-github-vercel-dual-runtime-20260815/);
-  assert.match(index,/\?v=29\.0\.0/);
+  assert.equal(pkg.version,'29.1.0');
+  assert.equal(config.version,'V29.1');
+  assert.match(config.buildId,/v29.1-wireframe-vercel-preview-fix-20260815/);
+  assert.match(start,/EXPECTED_VERSION=V29.1/);
+  assert.match(start,/EXPECTED_BUILD=v29.1-wireframe-vercel-preview-fix-20260815/);
+  assert.match(index,/\?v=29\.1\.0/);
 });
