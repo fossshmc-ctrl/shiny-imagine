@@ -1,0 +1,27 @@
+V29 CHANGELOG
+
+Release: 2026-08-15
+Build: v29-github-vercel-dual-runtime-20260815
+
+修复
+
+- 修复直接上传 Vercel 后 CSS/JS 资源未完整输出，导致 SVG 图标异常放大的问题。
+- 修复 server.js 被 Vercel 当成长驻服务使用的问题；改为可导出的请求处理器。
+- 修复线上仍尝试探测 127.0.0.1 Clash/V2Ray 代理造成的无效等待。
+- 修复 Serverless 只读文件系统导致历史仓库初始化失败；线上写入切换至 /tmp。
+
+新增
+
+- GitHub / Vercel 持续部署结构：vercel.json、api/index.js、dist 构建脚本。
+- 线上访问口令 AI_LINKUANG_ACCESS_CODE。
+- EvoLink 服务端托管密钥 EVOLINK_API_KEY / EVOLINK_BASE_URL。
+- 线上 API 主机白名单 AI_LINKUANG_ALLOWED_API_HOSTS。
+- 浏览器端 4.5MB 请求体提前拦截与中文提示。
+- Vercel Web Analytics 自动加载。
+- Vercel Preview / Production 部署指南。
+- HTML 关键兜底样式，静态资源异常时不再出现无限放大的 SVG。
+
+保留
+
+- V28.1.1 智能区域编辑、文字忠实度、连续微调基图选择和性能仪表盘折叠功能。
+- Windows start.bat Node 优先、Python 回退启动链路。

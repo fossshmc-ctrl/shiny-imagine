@@ -1,0 +1,119 @@
+V29 GitHub / Vercel 部署指南
+
+推荐路线：GitHub 作为唯一代码源，Vercel 负责 Preview 与 Production。
+
+准备仓库
+
+1. 解压 V29。
+2. 解压目录第一层必须直接包含：
+   vercel.json
+   package.json
+   index.html
+   server.js
+   start.bat
+   api
+   src
+   styles
+   assets
+3. 新建一个私有 GitHub 仓库。
+4. 把上述内容提交到仓库根目录。不要把 V29 整个目录再作为仓库中的二级子目录。
+5. 不要提交 .env、.vercel、dist、launch.log 或任何真实密钥；.gitignore 已处理常见情况。
+
+连接 Vercel
+
+1. 登录 Vercel。
+2. Add New → Project → Import Git Repository。
+3. 选择刚才的 GitHub 仓库。
+4. Root Directory 保持 ./。
+5. Framework Preset 选 Other；也可以保留自动识别结果。
+6. 不要在后台覆盖 Build Command 与 Output Directory：
+   Build Command = node scripts/build-vercel.js
+   Output Directory = dist
+   这两项已经写进 vercel.json。
+7. 添加环境变量。
+8. 点击 Deploy。
+
+环境变量推荐组合
+
+最小可用（每位测试者使用自己的 EvoLink Key）：
+AI_LINKUANG_ACCESS_CODE=你的访问口令
+
+统一托管 Key（推荐小范围内测）：
+AI_LINKUANG_ACCESS_CODE=你的访问口令
+EVOLINK_API_KEY=真实 EvoLink Key
+EVOLINK_BASE_URL=https://api.evolink.ai/v1
+
+需要文案通道时增加：
+COZE_API_TOKEN=真实扣子 Token
+
+需要云端 OCR 时增加：
+PADDLEOCR_ACCESS_TOKEN=真实 PaddleOCR Token
+
+Preview / Production
+
+1. 功能分支或 Pull Request：Vercel 自动创建独立 Preview URL。
+2. main 分支：自动发布 Production。
+3. 环境变量需要同时勾选 Preview 才能在预览链接测试 API。
+4. 每次改动先看 Preview，通过后再合并 main。
+5. Production 异常时，在 Deployments 选择上一版并 Promote / Rollback。
+
+Codex + Vercel 插件单次部署
+
+适合不维护 GitHub 同步的情况：
+
+1. 在 Codex 中安装并连接 Vercel 插件。
+2. 完成 Vercel 登录授权。
+3. 让 Codex 选择本 V29 解压目录，并先部署 Preview。
+4. 在插件或 Vercel 后台配置环境变量。
+5. 测试通过后，再让 Codex 发布 Production。
+
+建议给 Codex 的命令：
+
+“把当前 V29 目录部署到 Vercel，先创建 Preview，不要直接覆盖 Production。使用仓库中的 vercel.json；部署后检查首页 CSS/JS、/api/health、访问口令和一次 API 配置测试。确认后再发布 Production。”
+
+Analytics
+
+1. Vercel Project → Analytics。
+2. 点击 Enable。
+3. 重新部署一次 Production。
+4. V29 会在线上自动加载 /_vercel/insights/script.js。
+5. 广告拦截器可能阻止统计脚本；这不会影响工作台功能。
+
+为什么 V28.1.1 会显示巨大黑色星形
+
+页面 HTML 已发布，但 styles/base/layout.css 等静态资源没有按正确根目录输出。SVG 图标原本依赖 CSS 约束为 22px/44px；CSS 404 后，浏览器按 SVG 默认尺寸展示，所以画面被巨大黑色图标占满。
+
+V29 通过以下结构解决：
+
+源码 → scripts/build-vercel.js → dist
+Vercel 只发布 dist 中的 index.html / src / styles / assets
+/api/* → api/index.js → server.js 的 API 处理器
+
+因此静态资源发布和 API 运行不再依赖“Vercel 猜测项目结构”。
+
+验收清单
+
+[ ] 首页样式完整，无巨大图标
+[ ] /api/health 返回 V29
+[ ] runtime = vercel-serverless
+[ ] assetsReady = true
+[ ] 设置访问口令后未授权 API 返回 401
+[ ] 正确口令可进入
+[ ] 浏览器 Network 中 CSS/JS 均为 200
+[ ] 不存在可公开访问的 config.json、server.js、copy-coze.private.json
+[ ] 小图片生成功能可用
+[ ] 超过限制的大请求显示中文 4.5MB 提示
+[ ] Preview 与 Production 环境变量均正确
+[ ] Analytics 已 Enable（如需统计）
+
+线上限制与下一阶段
+
+V29 适合小范围体验和版本预览，不是多人协同数据库版本。若要长期给多人共用，下一阶段应增加：
+
+当前 vercel.json 把 Function 单次执行上限设为 300 秒，以兼容 Hobby 套餐；超过该时长的生成或 OCR 任务应改走 Windows 本地版或异步任务队列。
+
+1. 用户登录与角色权限。
+2. 对象存储直传，绕开 4.5MB Function 请求体。
+3. 持久化数据库保存任务、历史与审计日志。
+4. 异步任务队列承接 OCR / 长时间生成。
+5. 额度、限流和单用户调用配额。

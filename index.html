@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="application-name" content="图灵线框工作台 V29" />
+<title>V29 · 图灵线框工作台</title>
+<base href="/">
+<script src="src/bootstrap/title-guard.js?v=29.0.0"></script>
+<script src="src/core/deployment-runtime.js?v=29.0.0"></script>
+<style id="v29-critical-fallback">
+/* V29 critical fallback: prevents unbounded SVGs/unstyled layout if a deployment drops CSS assets. */
+html,body{min-height:100%;margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif}
+.app{display:flex;flex-direction:row-reverse;min-height:100vh}.side{width:260px;flex:0 0 260px}.main{flex:1;min-width:0}
+.ui-icon{width:1em;height:1em;max-width:64px;max-height:64px;display:inline-block;fill:none;stroke:currentColor}
+.nav .ui-icon{width:22px;height:22px}.tcard .ui-icon{width:44px;height:44px}
+</style>
+<link rel="stylesheet" href="styles/base/layout.css?v=29.0.0">
+<link rel="stylesheet" href="styles/base/theme-motion.css?v=29.0.0">
+<link rel="stylesheet" href="styles/features/copy-workbench.css?v=29.0.0">
+<link rel="stylesheet" href="styles/features/channel-status.css?v=29.0.0">
+<link rel="stylesheet" href="styles/features/wireframe-workbench.css?v=29.0.0">
+<link rel="stylesheet" href="styles/features/image-adjust-core.css?v=29.0.0">
+<link rel="stylesheet" href="styles/features/region-workbench.css?v=29.0.0">
+<link rel="stylesheet" href="styles/features/layer-protection-autosave.css?v=29.0.0">
+<link rel="stylesheet" href="styles/features/image-adjust-layout.css?v=29.0.0">
+<link rel="stylesheet" href="styles/features/region-template.css?v=29.0.0">
+<link rel="stylesheet" href="styles/features/parameter-conflict.css?v=29.0.0">
+<link rel="stylesheet" href="styles/features/multi-template.css?v=29.0.0">
+<link rel="stylesheet" href="styles/features/stable-combo.css?v=29.0.0">
+<link rel="stylesheet" href="styles/features/undo-command.css?v=29.0.0">
+<link rel="stylesheet" href="styles/features/project-menu.css?v=29.0.0">
+<link rel="stylesheet" href="styles/features/order-protection.css?v=29.0.0">
+<link rel="stylesheet" href="styles/features/paddleocr-cloud.css?v=29.0.0">
+
+
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="cap">功能导航</div>
+    <nav class="nav" id="nav">
+      <a class="home active" data-k="home"><span class="em"><svg class="ui-icon icon-studio" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3.5c.7 4.9 2.2 7.2 7.1 7.9-4.9.8-6.4 3.1-7.1 8-.7-4.9-2.2-7.2-7.1-8 4.9-.7 6.4-3 7.1-7.9Z"/><path class="icon-soft" d="M24.4 18.4c.4 2.7 1.2 4 3.9 4.4-2.7.4-3.5 1.7-3.9 4.4-.4-2.7-1.2-4-3.9-4.4 2.7-.4 3.5-1.7 3.9-4.4ZM7.2 19.1c.3 2.2 1 3.2 3.2 3.5-2.2.4-2.9 1.4-3.2 3.6-.3-2.2-1-3.2-3.2-3.6 2.2-.3 2.9-1.3 3.2-3.5Z"/><circle cx="26.2" cy="7.2" r="1.35"/></svg></span>首页</a>
+      <a class="tool" data-k="copy"><span class="em"><svg class="ui-icon icon-copy" viewBox="0 0 32 32" aria-hidden="true"><path d="M8.5 5.5h11.8l4.2 4.2v17H8.5z"/><path class="icon-soft" d="M20.3 5.5v4.2h4.2M12 12.2h8.4M12 16h7M12 19.8h4.8"/><path d="m17.9 24.8 6.7-6.7 2.8 2.8-6.7 6.7-3.8 1z"/><path d="m24.6 18.1 1.2-1.2c.6-.6 1.5-.6 2.1 0l.7.7c.6.6.6 1.5 0 2.1l-1.2 1.2"/><path class="icon-soft" d="M5.5 9.2v18.3h8.8"/></svg></span>文案生成</a>
+      <a class="tool" data-k="integrate"><span class="em"><svg class="ui-icon icon-wire" viewBox="0 0 32 32" aria-hidden="true"><path d="M6 11V6h5M21 6h5v5M26 21v5h-5M11 26H6v-5"/><rect x="9.5" y="9.5" width="13" height="13" rx="1.5"/><path class="icon-soft" d="M16 9.5v13M9.5 16h13"/><circle cx="16" cy="16" r="1.5"/><path d="M12 12h2M18 20h2"/></svg></span>AI 线框生成</a>
+      <a class="tool" data-k="image"><span class="em"><svg class="ui-icon icon-image" viewBox="0 0 32 32" aria-hidden="true"><rect x="5.5" y="6.5" width="21" height="19" rx="3"/><circle cx="21.8" cy="11.3" r="2"/><path d="m8.8 22 5.2-5.4 3.7 3.4 2.2-2 3.4 4"/><path class="icon-soft" d="M9.2 10.3h4.2M9.2 13.2h2.8"/><path d="M25.3 3.8v3M23.7 5.3h3M8 27.8h16"/></svg></span>AI 生图</a>
+      <a class="tool" data-k="adjust"><span class="em"><svg class="ui-icon icon-adjust" viewBox="0 0 32 32" aria-hidden="true"><rect x="5.5" y="5.5" width="21" height="21" rx="3"/><path d="M10 11h12M10 16h12M10 21h12"/><circle cx="14" cy="11" r="2.1"/><circle cx="20" cy="16" r="2.1"/><circle cx="12.5" cy="21" r="2.1"/><path class="icon-soft" d="M25.8 3.7v4.2M23.7 5.8h4.2"/></svg></span>智能区域编辑</a>
+    </nav>
+    <div class="admin">
+      <div class="lbl">管理</div>
+      <nav class="nav">
+        <a class="adm" data-k="users"><span class="em">⚙</span>用户管理</a>
+        <a class="adm" data-k="audit"><span class="em">📜</span>审计日志</a>
+      </nav>
+    </div>
+    <div class="side-foot">
+      <div class="pts">今日积分：无上限</div>
+      <div class="usr">admin</div>
+    </div>
+  </aside>
+  <main class="main"><div class="wrap" id="main"></div></main>
+</div>
+<button class="float-full" id="openFull" title="全屏查看">⛶ 全屏查看</button>
+<div id="toast"></div>
+<div id="actionStatus"></div>
+
+<script src="src/core/asset-url.js?v=29.0.0"></script>
+<script src="src/core/channel-isolation.js?v=29.0.0"></script>
+<script src="src/core/generation-channel-status.js?v=29.0.0"></script>
+<script src="src/core/latest-request-gate.js?v=29.0.0"></script>
+<script src="src/core/elapsed-timer.js?v=29.0.0"></script>
+<script src="src/core/copy-rules.js?v=29.0.0"></script>
+<script src="src/core/copy-snapshot-store.js?v=29.0.0"></script>
+<script src="src/core/route-persistence.js?v=29.0.0"></script>
+<script src="src/core/region-refresh-anchor.js?v=29.0.0"></script>
+<script src="src/core/json-utils.js?v=29.0.0"></script>
+<script src="src/core/evolink-image-adapter.js?v=29.0.0"></script>
+<script src="src/core/micro-image-transport.js?v=29.0.0"></script>
+<script src="src/core/micro-edit-base-session.js?v=29.0.0"></script>
+<script src="src/core/micro-performance-meter.js?v=29.0.0"></script>
+<script src="src/core/image-export.js?v=29.0.0"></script>
+<script src="src/core/region-prompt-state.js?v=29.0.0"></script>
+<script src="src/core/region-ai-prompt.js?v=29.0.0"></script>
+<script src="src/core/region-generation-regression.js?v=29.0.0"></script>
+<script src="src/core/wireframe-library-state.js?v=29.0.0"></script>
+<script src="src/core/wireframe-overview-state.js?v=29.0.0"></script>
+<script src="src/data/reference-content.js?v=29.0.0"></script>
+<script src="src/app/state-ui.js?v=29.0.0"></script>
+<script src="src/views/home-view.js?v=29.0.0"></script>
+<script src="src/features/copy/copy-api-profiles.js?v=29.0.0"></script>
+<script src="src/features/copy/copy-history.js?v=29.0.0"></script>
+<script src="src/features/copy/copy-workbench.js?v=29.0.0"></script>
+<script src="src/features/wireframe/wireframe-generation.js?v=29.0.0"></script>
+<script src="src/features/wireframe/wireframe-persistence.js?v=29.0.0"></script>
+<script src="src/features/wireframe/wireframe-library.js?v=29.0.0"></script>
+<script src="src/components/wireframe-picker.js?v=29.0.0"></script>
+<script src="src/features/image/image-generation.js?v=29.0.0"></script>
+<script src="src/features/adjust/image-adjust-core.js?v=29.0.0"></script>
+<script src="src/app/page-state-lifecycle.js?v=29.0.0"></script>
+<script src="src/app/router-events.js?v=29.0.0"></script>
+<script src="src/infrastructure/api/api-config-client.js?v=29.0.0"></script>
+<script src="src/components/generation-channel-status-card.js?v=29.0.0"></script>
+<script src="src/infrastructure/api/image-api-client.js?v=29.0.0"></script>
+<script src="src/features/prompt/prompt-composition.js?v=29.0.0"></script>
+<script src="src/features/adjust/image-adjust-enhancement-layer.js?v=29.0.0"></script>
+<script src="src/features/adjust/layer-protection-autosave.js?v=29.0.0"></script>
+<script src="src/features/adjust/image-adjust-workbench.js?v=29.0.0"></script>
+<script src="src/features/adjust/region-template.js?v=29.0.0"></script>
+<script src="src/features/adjust/parameter-conflict.js?v=29.0.0"></script>
+<script src="src/features/adjust/multi-template.js?v=29.0.0"></script>
+<script src="src/features/adjust/stable-combo.js?v=29.0.0"></script>
+<script src="src/features/adjust/undo-command.js?v=29.0.0"></script>
+<script src="src/features/adjust/project-menu.js?v=29.0.0"></script>
+<script src="src/features/adjust/order-protection.js?v=29.0.0"></script>
+<script src="src/features/adjust/paddleocr-cloud.js?v=29.0.0"></script>
+<script src="src/features/adjust/micro-adjust-output-channel.js?v=29.0.0"></script>
+<script src="src/core/image-generation-session.js?v=29.0.0"></script>
+<script src="src/features/image/image-flow-diagnostics.js?v=29.0.0"></script>
+
+<script src="src/integrations/copy-coze-channel.js?v=29.0.0"></script>
+<script src="src/integrations/micro-api-channel.js?v=29.0.0"></script>
+<script src="src/infrastructure/api/channel-runtime.js?v=29.0.0"></script>
+<script src="src/features/region-workbench/region-workbench.js?v=29.0.0"></script>
+<script src="src/features/region-workbench/region-route.js?v=29.0.0"></script>
+</body>
+</html>

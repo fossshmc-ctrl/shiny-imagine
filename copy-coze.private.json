@@ -1,0 +1,18 @@
+{
+  "version": "V29",
+  "enabled": true,
+  "docsUrl": "https://docs.coze.cn/developer_guides_coze_api_overview",
+  "apiBaseUrl": "https://api.coze.cn",
+  "chatPath": "/v3/chat",
+  "token": "",
+  "tokenMode": "manual_server_side",
+  "userIdPrefix": "turing-copy-current",
+  "bots": [
+    {
+      "id": "7636962053344903208",
+      "label": "扣子文案智能体",
+      "description": "文案生成专用 Bot API"
+    }
+  ],
+  "timeoutMs": 180000
+}

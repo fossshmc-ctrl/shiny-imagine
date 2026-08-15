@@ -1,0 +1,12 @@
+THIRD-PARTY NOTICE · V26
+=========================
+
+This package can call third-party APIs only after the user configures the corresponding credentials.
+
+PaddleOCR
+- The application calls the PaddleOCR official hosted asynchronous API only after the user configures a valid Access Token.
+- The package does not contain PaddleOCR model weights or a user token.
+
+Coze
+- Copy generation can use the Coze Bot API after a valid token is configured.
+- The distributed package does not require a real token to be embedded.

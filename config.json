@@ -1,0 +1,63 @@
+{
+  "port": 8787,
+  "baseUrl": "https://api.evolink.ai/v1",
+  "apiKey": "",
+  "forceHostIp": "",
+  "proxyUrl": "auto",
+  "version": "V29",
+  "paddleOcrCloud": {
+    "enabled": true,
+    "jobUrl": "https://paddleocr.aistudio-app.com/api/v2/ocr/jobs",
+    "model": "PaddleOCR-VL-1.6",
+    "pollIntervalMs": 5000,
+    "pollTimeoutMs": 600000,
+    "maxRegions": 40,
+    "token": "",
+    "submitRetryDelaysMs": [
+      3000,
+      6000,
+      12000,
+      20000
+    ],
+    "submitRetryJitterMs": 500
+  },
+  "imageProvider": {
+    "provider": "evolink",
+    "defaultModel": "gemini-3.1-flash-lite-image",
+    "filesApiBaseUrl": "https://files-api.evolink.ai",
+    "generationPath": "/v1/images/generations",
+    "taskPath": "/v1/tasks/{task_id}",
+    "apiKey": "",
+    "note": "API Key intentionally blank. V29 supports per-browser keys in Windows/local mode or server-managed EVOLINK_API_KEY on Vercel."
+  },
+  "network": {
+    "requestTimeoutMs": 120000,
+    "uploadTimeoutMs": 300000,
+    "diagnosticTimeoutMs": 20000,
+    "uploadRetryDelaysMs": [
+      1200,
+      3000,
+      7000
+    ],
+    "note": "V29 preserves the V28.1.1 micro-edit engine and adds GitHub/Vercel serverless routing, payload protection and hosted access control.",
+    "uploadAttemptTimeoutMs": 90000,
+    "referenceCacheTtlHours": 12,
+    "microAdjustPollTimeoutMs": 360000,
+    "keepAlive": true,
+    "microUploadAttemptTimeoutMs": 30000,
+    "microTaskRequestTimeoutMs": 12000,
+    "microGenerationSubmitTimeoutMs": 45000,
+    "microUploadConcurrency": 2,
+    "microPreflightCacheMs": 300000,
+    "microCreditFreshMs": 60000,
+    "microRunStaleMs": 600000,
+    "microRegionSyncTimeoutMs": 2880,
+    "microHandoffAckTimeoutMs": 0,
+    "microHandoffAckMode": "synchronous-before-provider",
+    "microAdjustPollSoftTimeoutMs": 180000,
+    "microAdjustPollMaxTimeoutMs": 480000,
+    "microTaskPollRetryAttempts": 3,
+    "microProxyQuarantineMs": 90000
+  },
+  "buildId": "v29-github-vercel-dual-runtime-20260815"
+}

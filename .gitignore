@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.vercel/
+.env
+.env.*
+!.env.example
+launch.log
+__pycache__/
+*.pyc
+config/*.secure
+config/*.dpapi
+data/v26/wireframe-history-assets/*
+!data/v26/wireframe-history-assets/.keep

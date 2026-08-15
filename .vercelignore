@@ -1,0 +1,14 @@
+dist
+tests
+docs/history
+docs/archive
+.env
+.env.*
+launch.log
+__pycache__
+*.pyc
+*.bat
+server.py
+paddleocr_cloud_service.py
+copy_coze_token.py
+SHA256SUMS.txt
